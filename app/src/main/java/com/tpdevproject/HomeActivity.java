@@ -8,13 +8,30 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+
+import com.firebase.client.Firebase;
+
 
 public class HomeActivity extends AppCompatActivity {
+
+    private Button bt;
+    private Firebase fb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        Firebase.setAndroidContext(this);
+        this.fb = new Firebase("https://tpdevproject.firebaseio.com/");
+        bt = (Button) findViewById(R.id.addButton);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Firebase child = fb.child("name");
+                child.setValue("Coucou");
+            }
+        });
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
