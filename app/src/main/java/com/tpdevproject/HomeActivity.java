@@ -48,6 +48,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });*/
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         viewPager = (ViewPager) findViewById(R.id.vp_tab);
         viewPager.setAdapter(new AdapterTab(getSupportFragmentManager(), this));

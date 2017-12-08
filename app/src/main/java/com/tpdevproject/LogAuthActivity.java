@@ -6,15 +6,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
-public class LogAuthActivity extends FragmentActivity {
+public class LogAuthActivity extends AppCompatActivity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log_auth);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogin);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(null);
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
@@ -30,6 +36,12 @@ public class LogAuthActivity extends FragmentActivity {
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
     public void choixFragment(View view){
         Fragment newFragment = null;
 
@@ -43,6 +55,12 @@ public class LogAuthActivity extends FragmentActivity {
         transaction.replace(R.id.frag_holder, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void onBackPressed(){
+        Log.i("onBackPressed", "start");
+        finish();
     }
 
 }
