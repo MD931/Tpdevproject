@@ -1,5 +1,6 @@
 package com.tpdevproject.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tpdevproject.HomeActivity;
+import com.tpdevproject.LogAuthActivity;
 import com.tpdevproject.R;
 import com.tpdevproject.models.User;
 
@@ -53,7 +55,14 @@ public class HomeFragment extends Fragment {
 
             }
         });*/
-
+        Button btnLogin = (Button) view.findViewById(R.id.goLogin);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), LogAuthActivity.class);
+                startActivity(intent);
+            }
+        });
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

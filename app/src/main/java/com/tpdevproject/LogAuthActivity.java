@@ -1,13 +1,14 @@
 package com.tpdevproject;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-public class LogAuthActivity extends AppCompatActivity {
+public class LogAuthActivity extends FragmentActivity {
 
 
     @Override
@@ -21,6 +22,12 @@ public class LogAuthActivity extends AppCompatActivity {
         LoginFragment lf = new LoginFragment();
         transaction.add(R.id.frag_holder, lf);
         transaction.commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 
     public void choixFragment(View view){
