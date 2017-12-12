@@ -17,10 +17,10 @@ public class LogAuthActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.log_auth);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogin);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogin);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(null);
+        getSupportActionBar().setTitle(null);*/
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();

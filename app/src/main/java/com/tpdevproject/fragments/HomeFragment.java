@@ -13,7 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -38,7 +40,10 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button btn = (Button) view.findViewById(R.id.addBtn);
-        final Firebase mRef = new Firebase("https://tpdevproject.firebaseio.com/users");
+        //final Firebase mRef = new Firebase("https://tpdevproject.firebaseio.com/users");
+
+        final Firebase mRef = new Firebase("https://tpdevproject.firebaseio.com/annonce");
+
         final EditText edt = (EditText) view.findViewById(R.id.addValue);
         final TextView txv = (TextView) view.findViewById(R.id.showValue);
         final FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -66,6 +71,24 @@ public class HomeFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getContext(), auth.getCurrentUser().getUid(), Toast.LENGTH_SHORT).show();
+                mRef.authWithCustomToken(auth.getCurrentUser().getUid(), new Firebase.AuthResultHandler() {
+                    @Override
+                    public void onAuthenticated(AuthData authData) {
+                        Toast.makeText(getContext(), "coucou", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onAuthenticationError(FirebaseError firebaseError) {
+
+                    }
+                });
+                mRef.child(auth.getCurrentUser().getUid()).setValue(edt.getText().toString());
+            }
+        });
+        /*btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 //create user
                 auth.createUserWithEmailAndPassword(edt.getText().toString(), "123456")
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -88,6 +111,6 @@ public class HomeFragment extends Fragment {
                             }
                         });
             }
-        });
+        });*/
     }
 }

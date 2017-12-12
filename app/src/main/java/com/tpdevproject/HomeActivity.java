@@ -18,8 +18,11 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.tpdevproject.tab.AdapterTab;
 import com.tpdevproject.tab.SlidingTabLayout;
 
@@ -32,6 +35,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager viewPager;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private FirebaseUser user;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 child.setValue("Coucou");
             }
         });*/
+       auth = FirebaseAuth.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -63,14 +69,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Merci à vous de vous connecter", Snackbar.LENGTH_LONG)
-                        .setAction("Connexion", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(getApplicationContext(), LogAuthActivity.class);
-                                startActivity(intent);
-                            }
-                        }).show();
+                if(user != null){
+                    Intent intent = new Intent(getApplicationContext(), AddAnnonceActivity.class);
+                    startActivity(intent);
+                }else {
+                    Snackbar.make(view, "Merci à vous de vous connecter", Snackbar.LENGTH_LONG)
+                            .setAction("Connexion", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            }).show();
+                }
             }
         });
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -83,6 +94,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        user = auth.getCurrentUser();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
