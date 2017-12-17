@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,18 +17,22 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class AddAnnonceActivity extends AppCompatActivity {
     final Calendar myBeginDate = Calendar.getInstance();
@@ -74,19 +76,44 @@ public class AddAnnonceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final DatabaseReference tmp = ref.push();
-                tmp.child("title").setValue(title.getText().toString());
-                tmp.child("description").setValue(description.getText().toString());
-                tmp.child("dateBegin").setValue(dateBegin.getText().toString());
-                tmp.child("dateEnd").setValue(dateEnd.getText().toString());
-                tmp.child("datePost").setValue(ServerValue.TIMESTAMP);
+                Map<String, Object> value = new HashMap<>();
+                value.put("user_id", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                value.put("title", title.getText().toString());
+                value.put("description", description.getText().toString());
+                value.put("dateBegin", dateBegin.getText().toString());
+                value.put("dateEnd", dateEnd.getText().toString());
+                value.put("datePost", ServerValue.TIMESTAMP);
+                tmp.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        /*
+                            Inserer le timestamp en négatif pour récuperer les posts
+                            du plus récent au plus ancien
+                         */
+                        if(dataSnapshot.getKey().equals("datePost")) {
+                            Long timestamp =(Long) dataSnapshot.getValue();
+                            dataSnapshot.getRef().setValue(timestamp*-1);
+                        }
+                    }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
+
+                tmp.setValue(value);
                 if(uri != null) {
-                    //final String key = tmp.getKey();
+
                     StorageReference str = storageReference.child(tmp.getKey());
                     UploadTask ut = str.putFile(uri);
                     ut.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            tmp.child("image").setValue(taskSnapshot.getDownloadUrl().toString());
+                            //tmp.child("image").setValue(taskSnapshot.getDownloadUrl().toString());
                             finish();
                         }
                     });
@@ -205,7 +232,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+        finish();
         return true;
     }
 

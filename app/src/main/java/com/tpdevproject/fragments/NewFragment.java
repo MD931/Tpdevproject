@@ -48,12 +48,12 @@ public class NewFragment extends Fragment {
         recyclerView=(RecyclerView)v.findViewById(R.id.recycle_annonce);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        myRef= FirebaseDatabase.getInstance().getReferenceFromUrl("https://tpdevproject.firebaseio.com/annonce");
+        myRef= FirebaseDatabase.getInstance().getReference("annonce");
         FirebaseRecyclerAdapter<Annonce,AnnonceViewHolder> recyclerAdapter=new FirebaseRecyclerAdapter<Annonce,AnnonceViewHolder>(
                 Annonce.class,
                 R.layout.item,
                 AnnonceViewHolder.class,
-                myRef
+                myRef.orderByChild("datePost")
         ) {
             @Override
             protected Annonce parseSnapshot(DataSnapshot snapshot) {
@@ -61,6 +61,8 @@ public class NewFragment extends Fragment {
                 if (annonce != null){
                     annonce.setId(snapshot.getKey());
                 }
+                if(snapshot.hasChild("images"))
+                    annonce.setImage(snapshot.child("images").child("thumbnail").getValue().toString());
                 int score = 0;
                 for(DataSnapshot e : snapshot.child("votes").getChildren()){
                     Log.i("parseSnapshot", "id = "+annonce.getId()+", "+e.getKey());

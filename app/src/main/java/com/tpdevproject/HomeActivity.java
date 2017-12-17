@@ -23,6 +23,11 @@ import android.widget.Toast;
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.tpdevproject.tab.AdapterTab;
 import com.tpdevproject.tab.SlidingTabLayout;
 
@@ -98,6 +103,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void onStart(){
         super.onStart();
         user = auth.getCurrentUser();
+        checkUser();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -163,6 +169,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    public void checkUser(){
+        if(user != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
+            userRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(!dataSnapshot.hasChild(user.getUid())){
+                        startActivity(new Intent(getApplicationContext(), SetupActivity.class));
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
 }

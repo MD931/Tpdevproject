@@ -20,8 +20,9 @@
     <string name="hint_description">Description</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
-    <string name="hint_name">Fullname</string>
+    <string name="hint_username">Uername</string>
     <string name="btn_login">LOGIN</string>
+    <string name="btn_google_login">Login with Google</string>
     <string name="btn_link_to_register">Not a member? Get registered in Firebase now!</string>
     <string name="btn_link_to_login">Already registered. Login Me!</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
