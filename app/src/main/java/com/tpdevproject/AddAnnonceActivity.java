@@ -42,7 +42,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
     StorageReference storageReference;
 
     private static final int GALLERY_REQUEST = 1;
-    private static final int CAMERA_REQUEST = 1;
+    private static final int CAMERA_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +113,6 @@ public class AddAnnonceActivity extends AppCompatActivity {
                     ut.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //tmp.child("image").setValue(taskSnapshot.getDownloadUrl().toString());
                             finish();
                         }
                     });
@@ -191,6 +190,8 @@ public class AddAnnonceActivity extends AppCompatActivity {
         }
         else if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
             Toast.makeText(this, "Yeahhhh !!!!!", Toast.LENGTH_SHORT).show();
+            imgBtn.setImageURI(data.getData());
+            uri = data.getData();
         }
     }
 
@@ -219,7 +220,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
     private void cameraIntent()
     {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, 2);
+        startActivityForResult(intent, CAMERA_REQUEST);
     }
 
     private void galleryIntent()

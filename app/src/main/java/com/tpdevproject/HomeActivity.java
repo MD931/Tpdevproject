@@ -57,7 +57,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 child.setValue("Coucou");
             }
         });*/
-       auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -172,7 +172,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void checkUser(){
+    private void checkUser(){
         if(user != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
             userRef.addValueEventListener(new ValueEventListener() {

@@ -13,11 +13,11 @@ public class Annonce {
     private String description;
     private String image;
     private int score;
-    private Map<String, String> coms = new HashMap<>();
+    private Map<String, Commentaire> coms = new HashMap<>();
 
     public Annonce() {}  // Needed for Firebase
 
-    public Annonce(String id, String title, String description, String image, HashMap<String, String> coms) {
+    public Annonce(String id, String title, String description, String image, HashMap<String, Commentaire> coms) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -61,11 +61,11 @@ public class Annonce {
         this.score = score;
     }
 
-    public void setComs(HashMap<String, String> coms) {
+    public void setComs(HashMap<String, Commentaire> coms) {
         this.coms = coms;
     }
 
-    public Map<String, String> getComs(){
+    public Map<String, Commentaire> getComs(){
         return coms;
     }
 
