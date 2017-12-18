@@ -38,4 +38,21 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="title_activity_add_annonce">Add Deal</string>
     <string name="add">Add</string>
+
+
+    <!-- COLUMNS -->
+    <string name="column_date_begin">date_begin</string>
+    <string name="column_date_end">date_end</string>
+    <string name="column_date_post">date_post</string>
+    <string name="column_title">title</string>
+    <string name="column_description">description</string>
+    <string name="column_images">images</string>
+    <string name="column_thumbnail">thumbnail</string>
+    <string name="column_user_id">user_id</string>
+    <string name="column_votes">votes</string>
+
+    <string name="column_username">username</string>
+    <string name="column_commentaire">commentaire</string>
+    <string name="column_commentaires">commentaires</string>
+
 </resources>

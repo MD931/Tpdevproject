@@ -40,7 +40,8 @@ public class AddAnnonceActivity extends AppCompatActivity {
     ImageButton imgBtn;
     Uri uri;
     StorageReference storageReference;
-
+    EditText title, description, dateBegin, dateEnd;
+    Button btnAdd;
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
 
@@ -48,26 +49,12 @@ public class AddAnnonceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_annonce);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        storageReference = FirebaseStorage.getInstance().getReference();
-        ref = FirebaseDatabase.getInstance().getReference().child("annonce");
-        final EditText title = (EditText) findViewById(R.id.add_title);
-        final EditText description = (EditText) findViewById(R.id.add_description);
-        final EditText dateBegin = (EditText) findViewById(R.id.add_date_begin);
-        final EditText dateEnd = (EditText) findViewById(R.id.add_date_end);
-        Button btnAdd = (Button) findViewById(R.id.add_btn);
-        imgBtn = (ImageButton) findViewById(R.id.add_img);
+
+        initializeVars();
 
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent, GALLERY_REQUEST);*/
                 selectImage();
             }
         });
@@ -77,12 +64,24 @@ public class AddAnnonceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final DatabaseReference tmp = ref.push();
                 Map<String, Object> value = new HashMap<>();
-                value.put("user_id", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                value.put("title", title.getText().toString());
-                value.put("description", description.getText().toString());
-                value.put("dateBegin", dateBegin.getText().toString());
-                value.put("dateEnd", dateEnd.getText().toString());
-                value.put("datePost", ServerValue.TIMESTAMP);
+                value.put(getResources().getString(R.string.column_user_id),
+                        FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                value.put(getResources().getString(R.string.column_title),
+                        title.getText().toString());
+
+                value.put(getResources().getString(R.string.column_description),
+                        description.getText().toString());
+
+                value.put(getResources().getString(R.string.column_date_begin),
+                        dateBegin.getText().toString());
+
+                value.put(getResources().getString(R.string.column_date_end),
+                        dateEnd.getText().toString());
+
+                value.put(getResources().getString(R.string.column_date_post),
+                        ServerValue.TIMESTAMP);
+
                 tmp.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -90,7 +89,8 @@ public class AddAnnonceActivity extends AppCompatActivity {
                             Inserer le timestamp en négatif pour récuperer les posts
                             du plus récent au plus ancien
                          */
-                        if(dataSnapshot.getKey().equals("datePost")) {
+                        if(dataSnapshot.getKey()
+                                .equals(getResources().getString(R.string.column_date_post))) {
                             Long timestamp =(Long) dataSnapshot.getValue();
                             dataSnapshot.getRef().setValue(timestamp*-1);
                         }
@@ -170,6 +170,21 @@ public class AddAnnonceActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void initializeVars(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        storageReference = FirebaseStorage.getInstance().getReference();
+        ref = FirebaseDatabase.getInstance().getReference().child("annonce");
+        title = (EditText) findViewById(R.id.add_title);
+        description = (EditText) findViewById(R.id.add_description);
+        dateBegin = (EditText) findViewById(R.id.add_date_begin);
+        dateEnd = (EditText) findViewById(R.id.add_date_end);
+        btnAdd = (Button) findViewById(R.id.add_btn);
+        imgBtn = (ImageButton) findViewById(R.id.add_img);
     }
 
     private void updateLabel(EditText v){

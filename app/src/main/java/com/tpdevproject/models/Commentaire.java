@@ -11,7 +11,7 @@ public class Commentaire {
     @PropertyName("user_id")
     private String userId;
 
-    @PropertyName("com")
+    @PropertyName("commentaire")
     private String commentaire;
 
     @PropertyName("date_post")

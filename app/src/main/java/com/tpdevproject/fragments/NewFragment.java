@@ -53,7 +53,7 @@ public class NewFragment extends Fragment {
                 Annonce.class,
                 R.layout.item,
                 AnnonceViewHolder.class,
-                myRef.orderByChild("datePost")
+                myRef.orderByChild(getResources().getString(R.string.column_date_post))
         ) {
             @Override
             protected Annonce parseSnapshot(DataSnapshot snapshot) {
@@ -61,10 +61,12 @@ public class NewFragment extends Fragment {
                 if (annonce != null){
                     annonce.setId(snapshot.getKey());
                 }
-                if(snapshot.hasChild("images"))
-                    annonce.setImage(snapshot.child("images").child("thumbnail").getValue().toString());
+                if(snapshot.hasChild(getResources().getString(R.string.column_images)))
+                    annonce.setImage(snapshot.child(getResources().getString(R.string.column_images))
+                            .child(getResources().getString(R.string.column_thumbnail)).getValue().toString());
                 int score = 0;
-                for(DataSnapshot e : snapshot.child("votes").getChildren()){
+                for(DataSnapshot e : snapshot.child(getResources().getString(R.string.column_votes))
+                        .getChildren()){
                     Log.i("parseSnapshot", "id = "+annonce.getId()+", "+e.getKey());
                     score += Integer.parseInt(e.getValue().toString());
                 }
