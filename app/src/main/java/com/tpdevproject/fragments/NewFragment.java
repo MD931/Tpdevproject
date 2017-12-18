@@ -79,7 +79,7 @@ public class NewFragment extends Fragment {
                 Log.i("populateViewHolder", position+"");
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setScore(model.getScore());
-                viewHolder.setNumberComs(model.getNumberComs());
+                viewHolder.setNumberComs(model.getNumberCommentaires());
                 viewHolder.setImage(getContext(), model.getImage());
                 viewHolder.textView_score.setOnClickListener(new View.OnClickListener() {
                     @Override
