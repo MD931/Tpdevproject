@@ -1,7 +1,6 @@
 package com.tpdevproject.fragments;
 
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -77,17 +76,18 @@ public class NewFragment extends Fragment {
             @Override
             protected void populateViewHolder(AnnonceViewHolder viewHolder, final Annonce model, int position) {
                 Log.i("populateViewHolder", position+"");
+
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setScore(model.getScore());
                 viewHolder.setNumberComs(model.getNumberCommentaires());
                 viewHolder.setImage(getContext(), model.getImage());
+
                 viewHolder.textView_score.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(getContext(), "Clique sur score", Toast.LENGTH_SHORT).show();
                     }
                 });
-
                 viewHolder.imageView_add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
