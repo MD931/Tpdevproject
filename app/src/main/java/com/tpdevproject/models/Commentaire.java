@@ -9,13 +9,13 @@ import com.google.firebase.database.PropertyName;
 public class Commentaire {
 
     @PropertyName("user_id")
-    private String userId;
+    public String userId;
 
     @PropertyName("commentaire")
     private String commentaire;
 
     @PropertyName("date_post")
-    private Long datePost;
+    public Long datePost;
 
     public Commentaire(){}
 
@@ -47,5 +47,14 @@ public class Commentaire {
 
     public void setDatePost(Long datePost) {
         this.datePost = datePost;
+    }
+
+    @Override
+    public String toString(){
+        return "{"
+                +"user_id = "+userId
+                +", commentaire = "+commentaire
+                +", date_poste = "+datePost
+                +"}";
     }
 }

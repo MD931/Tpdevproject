@@ -9,6 +9,8 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -27,6 +29,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.tpdevproject.models.Database;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,23 +38,50 @@ import java.util.Locale;
 import java.util.Map;
 
 public class AddAnnonceActivity extends AppCompatActivity {
-    final Calendar myBeginDate = Calendar.getInstance();
-    DatabaseReference ref;
-    ImageButton imgBtn;
-    Uri uri;
-    StorageReference storageReference;
-    EditText title, description, dateBegin, dateEnd;
-    Button btnAdd;
+
+    private static final String TAG = "AddAnnonceActivity";
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
 
+    private final Calendar myBeginDate = Calendar.getInstance();
+    private DatabaseReference ref;
+    private StorageReference storageReference;
+
+    private Uri uri;
+
+    private ImageButton imgBtn;
+    private EditText title, description, price, link,dateBegin, dateEnd;
+    private Button btnAdd;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_annonce);
-
         initializeVars();
+        initializeListeners();
+    }
 
+    private void initializeVars(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        storageReference = FirebaseStorage.getInstance().getReference();
+        ref = FirebaseDatabase.getInstance().getReference().child("annonce");
+        title = (EditText) findViewById(R.id.add_title);
+        description = (EditText) findViewById(R.id.add_description);
+        description.setSingleLine(false);
+        price = (EditText) findViewById(R.id.add_price);
+        link = (EditText) findViewById(R.id.add_link);
+        dateBegin = (EditText) findViewById(R.id.add_date_begin);
+        dateEnd = (EditText) findViewById(R.id.add_date_end);
+        btnAdd = (Button) findViewById(R.id.add_btn);
+        imgBtn = (ImageButton) findViewById(R.id.add_img);
+    }
+
+    private void initializeListeners() {
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,22 +94,43 @@ public class AddAnnonceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final DatabaseReference tmp = ref.push();
                 Map<String, Object> value = new HashMap<>();
-                value.put(getResources().getString(R.string.column_user_id),
+                value.put(Database.COLUMN_USER_ID,
                         FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                value.put(getResources().getString(R.string.column_title),
-                        title.getText().toString());
+                if(!TextUtils.isEmpty(title.getText().toString()))
+                    value.put(Database.COLUMN_TITLE,
+                            title.getText().toString());
+                else{
+                    Toast.makeText(getApplication(), "Field Title required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                value.put(getResources().getString(R.string.column_description),
-                        description.getText().toString());
+                if(!TextUtils.isEmpty(description.getText().toString()))
+                    value.put(Database.COLUMN_DESCRIPTION,
+                            description.getText().toString());
+                else{
+                    Toast.makeText(getApplication(), "Field Description required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                value.put(getResources().getString(R.string.column_date_begin),
-                        dateBegin.getText().toString());
 
-                value.put(getResources().getString(R.string.column_date_end),
-                        dateEnd.getText().toString());
+                if(!TextUtils.isEmpty(price.getText().toString()))
+                    value.put(Database.COLUMN_PRICE,
+                            Double.parseDouble(price.getText().toString()));
 
-                value.put(getResources().getString(R.string.column_date_post),
+                if(!TextUtils.isEmpty(link.getText().toString()))
+                    value.put(Database.COLUMN_LINK,
+                            link.getText().toString());
+
+                if(!TextUtils.isEmpty(dateBegin.getText().toString()))
+                    value.put(Database.COLUMN_DATE_BEGIN,
+                            dateBegin.getText().toString());
+
+                if(!TextUtils.isEmpty(dateEnd.getText().toString()))
+                    value.put(Database.COLUMN_DATE_END,
+                            dateEnd.getText().toString());
+
+                value.put(Database.COLUMN_DATE_POST,
                         ServerValue.TIMESTAMP);
 
                 tmp.addChildEventListener(new ChildEventListener() {
@@ -90,19 +141,27 @@ public class AddAnnonceActivity extends AppCompatActivity {
                             du plus récent au plus ancien
                          */
                         if(dataSnapshot.getKey()
-                                .equals(getResources().getString(R.string.column_date_post))) {
+                                .equals(Database.COLUMN_DATE_POST)) {
                             Long timestamp =(Long) dataSnapshot.getValue();
                             dataSnapshot.getRef().setValue(timestamp*-1);
                         }
                     }
                     @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        Log.i(TAG, "onChildChanged : "+s);
+                    }
                     @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        Log.i(TAG, "onChildRemoved : "+dataSnapshot.toString());
+                    }
                     @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        Log.i(TAG, "onChildMoved : "+s);
+                    }
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {}
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(TAG, "onCancelled : "+databaseError.toString());
+                    }
                 });
 
                 tmp.setValue(value);
@@ -128,7 +187,6 @@ public class AddAnnonceActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 myBeginDate.set(Calendar.YEAR, year);
                 myBeginDate.set(Calendar.MONTH, monthOfYear);
                 myBeginDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -140,7 +198,6 @@ public class AddAnnonceActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 myBeginDate.set(Calendar.YEAR, year);
                 myBeginDate.set(Calendar.MONTH, monthOfYear);
                 myBeginDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -152,7 +209,6 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 new DatePickerDialog(AddAnnonceActivity.this, date, myBeginDate
                         .get(Calendar.YEAR), myBeginDate.get(Calendar.MONTH),
                         myBeginDate.get(Calendar.DAY_OF_MONTH)).show();
@@ -163,7 +219,6 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 new DatePickerDialog(AddAnnonceActivity.this, date2, myBeginDate
                         .get(Calendar.YEAR), myBeginDate.get(Calendar.MONTH),
                         myBeginDate.get(Calendar.DAY_OF_MONTH)).show();
@@ -172,23 +227,8 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
     }
 
-    private void initializeVars(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        storageReference = FirebaseStorage.getInstance().getReference();
-        ref = FirebaseDatabase.getInstance().getReference().child("annonce");
-        title = (EditText) findViewById(R.id.add_title);
-        description = (EditText) findViewById(R.id.add_description);
-        dateBegin = (EditText) findViewById(R.id.add_date_begin);
-        dateEnd = (EditText) findViewById(R.id.add_date_end);
-        btnAdd = (Button) findViewById(R.id.add_btn);
-        imgBtn = (ImageButton) findViewById(R.id.add_img);
-    }
-
     private void updateLabel(EditText v){
-        String myFormat = "dd/MM/yy"; //In which you need put here
+        String myFormat = "dd/MM/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         v.setText(sdf.format(myBeginDate.getTime()));
     }
@@ -242,7 +282,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
     {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST);
     }
 

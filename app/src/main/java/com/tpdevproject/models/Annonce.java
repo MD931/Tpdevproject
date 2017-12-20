@@ -1,5 +1,6 @@
 package com.tpdevproject.models;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.PropertyName;
 
 import java.util.HashMap;
@@ -10,29 +11,51 @@ import java.util.Map;
  */
 
 public class Annonce {
+
     private String id;
+
     @PropertyName("title")
     private String title;
+
     @PropertyName("description")
     private String description;
+
+    @PropertyName("price")
+    private Double price;
+
+    @PropertyName("link")
+    private String link;
+
     @PropertyName("date_begin")
-    private String dateBegin;
+    public String dateBegin;
+
     @PropertyName("date_end")
-    private String dateEnd;
+    public String dateEnd;
+
     @PropertyName("date_post")
-    private Long datePost;
+    public Long datePost;
+
     @PropertyName("commentaires")
     private Map<String, Commentaire> commentaires = new HashMap<>();
 
+    @PropertyName("user_id")
+    public String userId;
+
+    private String username;
     private String image;
     private int score;
+
     public Annonce() {}  // Needed for Firebase
 
 
-    public Annonce(String id, String title, String description, String dateBegin, String dateEnd, Long datePost, Map<String, Commentaire> commentaires) {
+    public Annonce(String id, String title, String description, Double price,
+                   String link, String dateBegin, String dateEnd, Long datePost,
+                   Map<String, Commentaire> commentaires) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.price = price;
+        this.link = link;
         this.dateBegin = dateBegin;
         this.dateEnd = dateEnd;
         this.datePost = datePost;
@@ -47,9 +70,7 @@ public class Annonce {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setTitle(String title) { this.title = title; }
 
     public String getDescription() {
         return description;
@@ -59,21 +80,13 @@ public class Annonce {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
-    }
+    public Double getPrice() { return price; }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
+    public void setPrice(Double price) { this.price = price; }
 
-    public int getScore() {
-        return score;
-    }
+    public String getLink() { return link; }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
+    public void setLink(String link) { this.link = link; }
 
     public String getDateBegin() {
         return dateBegin;
@@ -111,4 +124,55 @@ public class Annonce {
         return this.commentaires.size();
     }
 
+    @Exclude
+    public String getUserId() {
+        return userId;
+    }
+
+    @Exclude
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    @Override
+    public String toString(){
+        return "{"
+                +"id = "+id
+                +", title = "+title
+                +", description = "+description
+                +", price = "+price
+                +", link = "+link
+                +", dateBegin ="+dateBegin
+                +", dateEnd ="+dateEnd
+                +", datePost ="+datePost
+                +", commentaires ="+commentaires.toString()
+                +", userId = "+userId
+                +", image = "+image
+                +", score = "+score
+                +"}";
+    }
 }
