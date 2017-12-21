@@ -34,8 +34,6 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Button btn = (Button) view.findViewById(R.id.addBtn);
 
-        final Firebase mRef = new Firebase("https://tpdevproject.firebaseio.com/annonce");
-
         final EditText edt = (EditText) view.findViewById(R.id.addValue);
         final FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -51,18 +49,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), auth.getCurrentUser().getUid(), Toast.LENGTH_SHORT).show();
-                mRef.authWithCustomToken(auth.getCurrentUser().getUid(), new Firebase.AuthResultHandler() {
-                    @Override
-                    public void onAuthenticated(AuthData authData) {
-                        Toast.makeText(getContext(), "coucou", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onAuthenticationError(FirebaseError firebaseError) {
-                        Log.e(TAG, "onAuthenticationError : "+firebaseError.toString());
-                    }
-                });
-                mRef.child(auth.getCurrentUser().getUid()).setValue(edt.getText().toString());
             }
         });
     }
