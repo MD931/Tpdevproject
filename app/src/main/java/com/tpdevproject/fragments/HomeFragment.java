@@ -16,7 +16,7 @@ import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
-import com.tpdevproject.LogAuthActivity;
+import com.tpdevproject.LoginActivity;
 import com.tpdevproject.R;
 
 
@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), LogAuthActivity.class);
+                Intent intent = new Intent(getContext(), LoginActivity.class);
                 startActivity(intent);
             }
         });

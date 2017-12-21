@@ -1,6 +1,7 @@
 package com.tpdevproject.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.tpdevproject.DetailActivity;
 import com.tpdevproject.R;
 import com.tpdevproject.models.Annonce;
 import com.tpdevproject.models.Database;
@@ -36,6 +38,7 @@ public class NewFragment extends Fragment {
     private FirebaseUser user;
 
     public NewFragment() {
+        super();
     }
 
     @Override
@@ -141,6 +144,16 @@ public class NewFragment extends Fragment {
                 Log.i("populateViewHolder", ""+model.getUsername());
                 viewHolder.setUsername("aaaaa");
                 viewHolder.setImage(getContext(), model.getImage());
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent mIntent = new Intent(getContext(), DetailActivity.class);
+                        Bundle mBundle = new Bundle();
+                        mBundle.putString(DetailActivity.ID_DEAL, model.getId());
+                        mIntent.putExtras(mBundle);
+                        startActivity(mIntent);
+                    }
+                });
 
                 viewHolder.textView_score.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -180,7 +193,7 @@ public class NewFragment extends Fragment {
         private View mView;
         private ImageView view_image, imageView_minus, imageView_add;
         private TextView textView_title, textView_score;
-        TextView textView_number_coms, textView_username;
+        private TextView textView_number_coms, textView_username;
 
         public AnnonceViewHolder(View itemView) {
             super(itemView);
@@ -210,6 +223,10 @@ public class NewFragment extends Fragment {
             textView_username.setText(username);
         }
         public void setImage(Context context, String url) {
-            Picasso.with(context).load(url).into(view_image);}
+            Picasso.with(context)
+                    .load(url)
+                    //.placeholder(R.drawable.ic_launcher_background) //Put image if not exist
+                    //.error(R.drawable.ic_launcher_background) // Put image if error
+                    .into(view_image);}
     }
 }

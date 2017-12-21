@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,6 +53,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
     private ImageButton imgBtn;
     private EditText title, description, price, link,dateBegin, dateEnd;
     private Button btnAdd;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -79,6 +81,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
         dateEnd = (EditText) findViewById(R.id.add_date_end);
         btnAdd = (Button) findViewById(R.id.add_btn);
         imgBtn = (ImageButton) findViewById(R.id.add_img);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
     private void initializeListeners() {
@@ -92,46 +95,14 @@ public class AddAnnonceActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 final DatabaseReference tmp = ref.push();
-                Map<String, Object> value = new HashMap<>();
-                value.put(Database.COLUMN_USER_ID,
-                        FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                if(!TextUtils.isEmpty(title.getText().toString()))
-                    value.put(Database.COLUMN_TITLE,
-                            title.getText().toString());
-                else{
-                    Toast.makeText(getApplication(), "Field Title required", Toast.LENGTH_SHORT).show();
+                if(!verifyRequiredField()){
                     return;
                 }
-
-                if(!TextUtils.isEmpty(description.getText().toString()))
-                    value.put(Database.COLUMN_DESCRIPTION,
-                            description.getText().toString());
-                else{
-                    Toast.makeText(getApplication(), "Field Description required", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-
-                if(!TextUtils.isEmpty(price.getText().toString()))
-                    value.put(Database.COLUMN_PRICE,
-                            Double.parseDouble(price.getText().toString()));
-
-                if(!TextUtils.isEmpty(link.getText().toString()))
-                    value.put(Database.COLUMN_LINK,
-                            link.getText().toString());
-
-                if(!TextUtils.isEmpty(dateBegin.getText().toString()))
-                    value.put(Database.COLUMN_DATE_BEGIN,
-                            dateBegin.getText().toString());
-
-                if(!TextUtils.isEmpty(dateEnd.getText().toString()))
-                    value.put(Database.COLUMN_DATE_END,
-                            dateEnd.getText().toString());
-
-                value.put(Database.COLUMN_DATE_POST,
-                        ServerValue.TIMESTAMP);
+                progressBar.setVisibility(View.VISIBLE);
+                HashMap<String, Object> map = generateMapOfField();
 
                 tmp.addChildEventListener(new ChildEventListener() {
                     @Override
@@ -164,18 +135,21 @@ public class AddAnnonceActivity extends AppCompatActivity {
                     }
                 });
 
-                tmp.setValue(value);
+                tmp.setValue(map);
                 if(uri != null) {
 
-                    StorageReference str = storageReference.child(tmp.getKey());
+                    StorageReference str = storageReference.child(Database.STORAGE_FOLDER_IMG_DEAL)
+                            .child(tmp.getKey());
                     UploadTask ut = str.putFile(uri);
                     ut.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressBar.setVisibility(View.GONE);
                             finish();
                         }
                     });
                 }else {
+                    progressBar.setVisibility(View.GONE);
                     finish();
                 }
             }
@@ -227,12 +201,61 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
     }
 
+    private HashMap<String, Object> generateMapOfField() {
+        HashMap<String, Object> value = new HashMap<>();
+
+
+        value.put(Database.COLUMN_USER_ID,
+                FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        value.put(Database.COLUMN_DATE_POST,
+                ServerValue.TIMESTAMP);
+
+        if(!TextUtils.isEmpty(title.getText().toString()))
+            value.put(Database.COLUMN_TITLE,
+                    title.getText().toString());
+
+        if(!TextUtils.isEmpty(description.getText().toString()))
+            value.put(Database.COLUMN_DESCRIPTION,
+                    description.getText().toString());
+
+
+        if(!TextUtils.isEmpty(price.getText().toString()))
+            value.put(Database.COLUMN_PRICE,
+                    Double.parseDouble(price.getText().toString()));
+
+        if(!TextUtils.isEmpty(link.getText().toString()))
+            value.put(Database.COLUMN_LINK,
+                    link.getText().toString());
+
+        if(!TextUtils.isEmpty(dateBegin.getText().toString()))
+            value.put(Database.COLUMN_DATE_BEGIN,
+                    dateBegin.getText().toString());
+
+        if(!TextUtils.isEmpty(dateEnd.getText().toString()))
+            value.put(Database.COLUMN_DATE_END,
+                    dateEnd.getText().toString());
+
+        return value;
+    }
+
     private void updateLabel(EditText v){
         String myFormat = "dd/MM/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         v.setText(sdf.format(myBeginDate.getTime()));
     }
 
+    public boolean verifyRequiredField(){
+        if(TextUtils.isEmpty(title.getText().toString())){
+            title.setError("Title required");
+            return false;
+        }
+        if(TextUtils.isEmpty(description.getText().toString())){
+            description.setError("Description required");
+            return false;
+        }
+        return true;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

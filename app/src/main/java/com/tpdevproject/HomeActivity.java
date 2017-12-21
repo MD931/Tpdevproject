@@ -2,7 +2,6 @@ package com.tpdevproject;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
@@ -28,15 +27,15 @@ import com.tpdevproject.tab.AdapterTab;
 import com.tpdevproject.tab.SlidingTabLayout;
 
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity /*implements NavigationView.OnNavigationItemSelectedListener*/ {
 
     private final String TAG = "HomeActivity";
 
     private FloatingActionButton fab;
     private SlidingTabLayout slidingTabLayout;
     private ViewPager viewPager;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    /*private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;*/
     private FirebaseUser user;
     private FirebaseAuth auth;
     private Toolbar toolbar;
@@ -110,7 +109,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Log.i(TAG, "selectItem : "+position);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /*@SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -133,7 +132,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
+    }*/
 
     private void initializeVars(){
 
@@ -147,7 +146,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //Sliding
         viewPager = (ViewPager) findViewById(R.id.vp_tab);
-        viewPager.setAdapter(new AdapterTab(getSupportFragmentManager(), this));
+        viewPager.setAdapter(new AdapterTab(getSupportFragmentManager()));
         slidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tab);
         setupTabs();
         slidingTabLayout.setViewPager(viewPager);

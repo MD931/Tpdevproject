@@ -25,4 +25,8 @@ public class Database {
     public static String COLUMN_USERNAME = "username";
     public static String COLUMN_COMMENTAIRE = "commentaire";
     public static String COLUMN_COMMENTAIRES = "commentaires";
+
+    // Storage
+    public static String STORAGE_FOLDER_IMG_DEAL = "deal_images";
+    public static String STORAGE_FOLDER_IMG_PROFILE = "profile_images";
 }

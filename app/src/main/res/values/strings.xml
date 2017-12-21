@@ -44,7 +44,7 @@
     <string name="login_before">Please login in before</string>
     <string name="login">Login</string>
     <string name="auth_with_google_failed">Authentication failed.</string>
-
+    <string name="title_activity_main">MainActivity</string>
 
 
 </resources>

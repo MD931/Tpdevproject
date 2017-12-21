@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
-import com.firebase.client.Firebase;
-import com.tpdevproject.FireApp;
 import com.tpdevproject.fragments.CategoryFragment;
 import com.tpdevproject.fragments.HomeFragment;
 import com.tpdevproject.fragments.NewFragment;
@@ -17,11 +14,9 @@ import com.tpdevproject.fragments.NewFragment;
  */
 
 public class AdapterTab extends FragmentPagerAdapter{
-    private Context context;
     private String[] titles = {"Home", "New", "Categorie"};
-    public AdapterTab(FragmentManager fm, Context context) {
+    public AdapterTab(FragmentManager fm) {
         super(fm);
-        this.context = context;
     }
 
     @Override

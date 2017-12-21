@@ -9,16 +9,9 @@ import com.firebase.client.Firebase;
  */
 
 public class FireApp extends Application {
-
-    Firebase mRef;
     @Override
     public void onCreate(){
         super.onCreate();
         Firebase.setAndroidContext(this);
-        mRef = new Firebase("https://tpdevproject.firebaseio.com/");
-    }
-
-    public Firebase getMRef(){
-        return mRef;
     }
 }
