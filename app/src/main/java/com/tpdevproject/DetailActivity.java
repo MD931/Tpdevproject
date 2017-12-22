@@ -73,9 +73,11 @@ public class DetailActivity extends AppCompatActivity {
 
     private void bindDataOnView(DataSnapshot dataSnapshot){
         Log.i(TAG, "bindDataOnView");
-        picassoLoader(getApplicationContext(), toolbarImage,
+        if(dataSnapshot.hasChild(Database.COLUMN_IMAGES))
+            picassoLoader(getApplicationContext(), toolbarImage,
                 dataSnapshot.child(Database.COLUMN_IMAGES)
                         .child(Database.COLUMN_THUMBNAIL).getValue().toString());
+
         title.setText(dataSnapshot
                 .child(Database.COLUMN_TITLE).getValue().toString());
         description.setText(dataSnapshot
