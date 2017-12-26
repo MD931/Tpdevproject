@@ -26,8 +26,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tpdevproject.DetailActivity;
 import com.tpdevproject.R;
+import com.tpdevproject.adapters.Holder;
 import com.tpdevproject.models.Annonce;
 import com.tpdevproject.models.Database;
+import com.tpdevproject.adapters.Holder.AnnonceViewHolder;
 
 
 public class NewFragment extends Fragment {
@@ -60,7 +62,7 @@ public class NewFragment extends Fragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.recycle_annonce);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        FirebaseRecyclerAdapter<Annonce,AnnonceViewHolder> recyclerAdapter=new FirebaseRecyclerAdapter<Annonce,AnnonceViewHolder>(
+        FirebaseRecyclerAdapter<Annonce,Holder.AnnonceViewHolder> recyclerAdapter=new FirebaseRecyclerAdapter<Annonce,AnnonceViewHolder>(
                 Annonce.class,
                 R.layout.item,
                 AnnonceViewHolder.class,
@@ -144,7 +146,7 @@ public class NewFragment extends Fragment {
                 Log.i("populateViewHolder", ""+model.getUsername());
                 viewHolder.setUsername("aaaaa");
                 viewHolder.setImage(getContext(), model.getImage());
-                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent mIntent = new Intent(getContext(), DetailActivity.class);
@@ -210,46 +212,5 @@ public class NewFragment extends Fragment {
             }
         };
         recyclerView.setAdapter(recyclerAdapter);
-    }
-
-    public static class AnnonceViewHolder extends RecyclerView.ViewHolder {
-        private View mView;
-        private ImageView view_image;
-        private TextView textView_title, textView_score;
-        private TextView textView_number_coms, textView_username, textView_minus, textView_add;
-
-        public AnnonceViewHolder(View itemView) {
-            super(itemView);
-            mView=itemView;
-            textView_title = (TextView)itemView.findViewById(R.id.item_title);
-            textView_score = (TextView)itemView.findViewById(R.id.item_score);
-            textView_number_coms = (TextView)itemView.findViewById(R.id.item_number_coms);
-            textView_username = (TextView)itemView.findViewById(R.id.item_username);
-            view_image = (ImageView) itemView.findViewById(R.id.item_image);
-            textView_add = (TextView) itemView.findViewById(R.id.vote_add);
-            textView_minus = (TextView) itemView.findViewById(R.id.vote_minus);
-        }
-        public void setTitle(String title)
-        {
-            textView_title.setText(title+"");
-        }
-        public void setScore(int score)
-        {
-            textView_score.setText(score+"");
-        }
-        public void setNumberComs(int numberComs)
-        {
-            textView_number_coms.setText(numberComs+"");
-        }
-        public void setUsername(String username)
-        {
-            textView_username.setText(username);
-        }
-        public void setImage(Context context, String url) {
-            Picasso.with(context)
-                    .load(url)
-                    //.placeholder(R.drawable.ic_launcher_background) //Put image if not exist
-                    //.error(R.drawable.ic_launcher_background) // Put image if error
-                    .into(view_image);}
     }
 }

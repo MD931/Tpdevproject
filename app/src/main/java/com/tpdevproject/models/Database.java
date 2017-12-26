@@ -30,4 +30,6 @@ public class Database {
     // Storage
     public static String STORAGE_FOLDER_IMG_DEAL = "deal_images";
     public static String STORAGE_FOLDER_IMG_PROFILE = "profile_images";
+
+    public static String URL = "https://us-central1-tpdevproject.cloudfunctions.net/";
 }

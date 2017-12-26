@@ -20,12 +20,12 @@
     <RelativeLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/recycle_annonce">
-
-        </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:id="@+id/result_search"
+        android:gravity="center">
+        <ProgressBar
+            android:id="@+id/progress_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
