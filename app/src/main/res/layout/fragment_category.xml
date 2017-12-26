@@ -2,12 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tpdevproject.Category">
+    tools:context="com.tpdevproject.HomeActivity">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Categorie" />
+        android:id="@+id/recycle_annonce">
+
+    </android.support.v7.widget.RecyclerView>
 
 </FrameLayout>

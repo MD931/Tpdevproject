@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -236,6 +237,8 @@ public class AddAnnonceActivity extends AppCompatActivity {
             value.put(Database.COLUMN_DATE_END,
                     dateEnd.getText().toString());
 
+        value.put(Database.COLUMN_ORDER, 0);
+
         return value;
     }
 
@@ -314,5 +317,4 @@ public class AddAnnonceActivity extends AppCompatActivity {
         finish();
         return true;
     }
-
 }

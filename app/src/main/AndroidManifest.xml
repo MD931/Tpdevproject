@@ -20,7 +20,11 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchResultsActivity" />
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -36,7 +40,18 @@
             android:label="@string/title_activity_add_annonce"
             android:theme="@style/AppTheme" />
         <activity android:name=".SetupActivity" />
-        <activity android:name=".DetailActivity">
+        <activity android:name=".DetailActivity"></activity>
+        <activity android:name=".SearchResultsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <!-- to identify this activity as "searchable" -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
     </application>
 

@@ -38,6 +38,13 @@ public class Annonce {
     @PropertyName("commentaires")
     private Map<String, Commentaire> commentaires = new HashMap<>();
 
+    @PropertyName("order")
+
+    private Integer order;
+
+    @PropertyName("votes")
+    private Map<String, Integer> votes = new HashMap<>();
+
     @PropertyName("user_id")
     public String userId;
 
@@ -50,7 +57,8 @@ public class Annonce {
 
     public Annonce(String id, String title, String description, Double price,
                    String link, String dateBegin, String dateEnd, Long datePost,
-                   Map<String, Commentaire> commentaires) {
+                   Map<String, Commentaire> commentaires,
+                   Integer order, Map<String, Integer> votes) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -60,6 +68,9 @@ public class Annonce {
         this.dateEnd = dateEnd;
         this.datePost = datePost;
         this.commentaires = commentaires;
+        this.order = order;
+        this.votes = votes;
+
     }
 
     public String getId() { return id; }
@@ -120,6 +131,22 @@ public class Annonce {
         this.commentaires = commentaires;
     }
 
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
+    public Map<String, Integer> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Map<String, Integer> votes) {
+        this.votes = votes;
+    }
+
     public int getNumberCommentaires(){
         return this.commentaires.size();
     }
@@ -170,6 +197,8 @@ public class Annonce {
                 +", dateEnd ="+dateEnd
                 +", datePost ="+datePost
                 +", commentaires ="+commentaires.toString()
+                +", order = "+order
+                +", votes = "+votes.toString()
                 +", userId = "+userId
                 +", image = "+image
                 +", score = "+score

@@ -20,6 +20,7 @@ public class Database {
     public static String COLUMN_LINK = "link";
     public static String COLUMN_IMAGES = "images";
     public static String COLUMN_THUMBNAIL = "thumbnail";
+    public static String COLUMN_ORDER = "order";
     public static String COLUMN_USER_ID = "user_id";
     public static String COLUMN_VOTES = "votes";
     public static String COLUMN_USERNAME = "username";
