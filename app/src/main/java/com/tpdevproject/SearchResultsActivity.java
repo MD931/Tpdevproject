@@ -114,10 +114,10 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     private void showResults(String query) {
         RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
-        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, Database.URL + "bigben?search=" + query,
-                null, new Response.Listener<JSONArray>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Database.URL + "bigben?search=" + query,
+                null, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(JSONObject response) {
                 Log.i(TAG, "onResponse : "+response.toString());
                 try{
                     List<Annonce> annonces = getAnnonces(response);
@@ -159,17 +159,20 @@ public class SearchResultsActivity extends AppCompatActivity {
         recyclerView.setAdapter(annonceAdapter);
     }
 
-    private List<Annonce> getAnnonces(JSONArray response) throws JSONException{
+    private List<Annonce> getAnnonces(JSONObject response) throws JSONException{
         List<Annonce> listAnnonce = new ArrayList();
-        for(int i = 0; i<response.length();i++){
-            listAnnonce.add(parseAnnonce(response.getJSONObject(i)));
+        Iterator<String> keys = response.keys();
+        while(keys.hasNext()){
+            String key = keys.next();
+            listAnnonce.add(parseAnnonce(key, response.getJSONObject(key)));
         }
 
         return listAnnonce;
     }
 
-    private Annonce parseAnnonce(JSONObject json) throws JSONException{
+    private Annonce parseAnnonce(String id, JSONObject json) throws JSONException{
         Annonce annonce = new Annonce();
+        annonce.setId(id);
         if(json.has(Database.COLUMN_TITLE))
             annonce.setTitle(json.getString(Database.COLUMN_TITLE));
         if(json.has(Database.COLUMN_DESCRIPTION))
@@ -180,16 +183,22 @@ public class SearchResultsActivity extends AppCompatActivity {
             annonce.setDateBegin(json.getString(Database.COLUMN_DATE_BEGIN));
         if(json.has(Database.COLUMN_DATE_END))
             annonce.setDateEnd(json.getString(Database.COLUMN_DATE_END));
-        if(json.has(Database.COLUMN_THUMBNAIL))
-            annonce.setImage(json.getString(Database.COLUMN_THUMBNAIL));
-        if(json.has(Database.COLUMN_ORDER))
+        if(json.has(Database.COLUMN_IMAGES))
+            if(json.getJSONObject(Database.COLUMN_IMAGES).has(Database.COLUMN_THUMBNAIL))
+                annonce.setImage(json.getJSONObject(Database.COLUMN_IMAGES)
+                        .getString(Database.COLUMN_THUMBNAIL));
+        if(json.has(Database.COLUMN_ORDER)) {
             annonce.setOrder(json.getInt(Database.COLUMN_ORDER));
+            annonce.setScore(json.getInt(Database.COLUMN_ORDER)*-1);
+        }
         if(json.has(Database.COLUMN_VOTES))
             annonce.setVotes(parseVotes(json.getJSONObject(Database.COLUMN_VOTES)));
         if(json.has(Database.COLUMN_PRICE))
             annonce.setPrice(json.getDouble(Database.COLUMN_PRICE));
         if(json.has(Database.COLUMN_LINK))
             annonce.setLink(json.getString(Database.COLUMN_LINK));
+        if(json.has(Database.COLUMN_USER_ID))
+            annonce.setUserId(json.getString(Database.COLUMN_USER_ID));
 
         return annonce;
     }

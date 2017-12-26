@@ -12,10 +12,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.tpdevproject.DetailActivity;
 import com.tpdevproject.R;
 import com.tpdevproject.models.Annonce;
+import com.tpdevproject.models.Database;
 
 import java.util.List;
 
@@ -43,8 +48,22 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
         return new Holder.AnnonceViewHolder(item);
     }
 
+
     @Override
-    public void onBindViewHolder(Holder.AnnonceViewHolder holder,final int position) {
+    public void onBindViewHolder(final Holder.AnnonceViewHolder holder,final int position) {
+        //Jointure pour récuperer le username de l'utilisateur
+        DatabaseReference userRef = FirebaseDatabase.getInstance()
+                .getReference(Database.TABLE_USERS)
+                .child(listAnnonce.get(position).getUserId());
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                holder.setUsername(dataSnapshot.child("username").getValue().toString());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
         holder.setTitle(listAnnonce.get(position).getTitle());
         holder.setScore(listAnnonce.get(position).getScore());
         holder.setNumberComs(listAnnonce.get(position).getNumberCommentaires());
