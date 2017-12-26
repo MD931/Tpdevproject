@@ -18,7 +18,8 @@ public class Holder {
         public View itemView;
         public ImageView view_image;
         public TextView textView_title, textView_score;
-        public TextView textView_number_coms, textView_username, textView_minus, textView_add;
+        public TextView textView_time_elapsed,
+                textView_number_coms, textView_username, textView_minus, textView_add;
 
         public AnnonceViewHolder(View itemView) {
             super(itemView);
@@ -30,6 +31,7 @@ public class Holder {
             view_image = (ImageView) itemView.findViewById(R.id.item_image);
             textView_add = (TextView) itemView.findViewById(R.id.vote_add);
             textView_minus = (TextView) itemView.findViewById(R.id.vote_minus);
+            textView_time_elapsed = (TextView) itemView.findViewById(R.id.item_time_elapsed);
         }
         public void setTitle(String title)
         {
@@ -47,6 +49,7 @@ public class Holder {
         {
             textView_username.setText(username);
         }
+        public void setTimeElapsed(String time) { textView_time_elapsed.setText(time); }
         public void setImage(Context context, String url) {
             Picasso.with(context)
                     .load(url)

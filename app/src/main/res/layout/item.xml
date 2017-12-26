@@ -41,7 +41,7 @@
                 android:layout_below="@id/item_title"
                 android:layout_toRightOf="@id/item_image"/>
             <TextView
-                android:id="@+id/item_date_posted"
+                android:id="@+id/item_time_elapsed"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

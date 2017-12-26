@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tpdevproject.DetailActivity;
 import com.tpdevproject.R;
+import com.tpdevproject.Utils.DateTimeUtils;
 import com.tpdevproject.adapters.Holder;
 import com.tpdevproject.models.Annonce;
 import com.tpdevproject.models.Database;
@@ -146,6 +147,9 @@ public class NewFragment extends Fragment {
                 Log.i("populateViewHolder", ""+model.getUsername());
                 viewHolder.setUsername("aaaaa");
                 viewHolder.setImage(getContext(), model.getImage());
+                viewHolder.setTimeElapsed(
+                        DateTimeUtils.elapsedTimes(model.getDatePost()*-1
+                                ,System.currentTimeMillis()));
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
