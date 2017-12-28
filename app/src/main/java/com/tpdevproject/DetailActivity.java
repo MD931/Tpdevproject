@@ -194,7 +194,7 @@ public class DetailActivity extends AppCompatActivity {
     private void bindDataOnView(DataSnapshot dataSnapshot) {
         Log.i(TAG, "bindDataOnView : " + dataSnapshot.toString());
         JSONObject json = null;
-        //annonce = AnnonceParser.parseAnnonce(dataSnapshot.getKey(), dataSnapshot.getValue(JSONObject.class));
+        //annonce = Parser.parseAnnonce(dataSnapshot.getKey(), dataSnapshot.getValue(JSONObject.class));
         annonce = dataSnapshot.getValue(Annonce.class);
         annonce.setId(dataSnapshot.getKey());
 

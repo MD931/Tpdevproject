@@ -17,6 +17,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tpdevproject.LoginActivity;
+import com.tpdevproject.MapsActivity;
 import com.tpdevproject.R;
 
 
@@ -48,7 +49,8 @@ public class HomeFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), auth.getCurrentUser().getUid(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), MapsActivity.class);
+                startActivity(intent);
             }
         });
     }

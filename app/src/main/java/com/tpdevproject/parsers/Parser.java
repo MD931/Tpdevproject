@@ -1,8 +1,10 @@
 package com.tpdevproject.parsers;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.tpdevproject.models.Annonce;
 import com.tpdevproject.models.Database;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,7 +16,19 @@ import java.util.Map;
  * Created by root on 27/12/17.
  */
 
-public class AnnonceParser {
+public class Parser {
+
+    public static LatLng parseLocation(JSONObject json) throws JSONException {
+        double[] latLng = {0.0,0.0};
+        if(json.has("results")){
+            JSONObject tmp = json.getJSONArray("results").getJSONObject(0);
+            Double lat = tmp.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+            Double lng = tmp.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+            return new LatLng(lat,lng);
+        }
+        return null;
+
+    }
 
     public static Annonce parseAnnonce(String id, JSONObject json) throws JSONException {
         Annonce annonce = new Annonce();
@@ -62,4 +76,6 @@ public class AnnonceParser {
         }
         return m;
     }
+
+
 }

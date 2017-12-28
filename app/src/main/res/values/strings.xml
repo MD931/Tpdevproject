@@ -48,5 +48,6 @@
     <string name="auth_with_google_failed">Authentication failed.</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="no_result">No result</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

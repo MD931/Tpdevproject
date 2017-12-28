@@ -3,10 +3,6 @@ package com.tpdevproject;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.opengl.Visibility;
-import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,47 +12,30 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 import com.tpdevproject.adapters.AnnonceAdapter;
 import com.tpdevproject.models.Annonce;
 import com.tpdevproject.models.Database;
-import com.tpdevproject.parsers.AnnonceParser;
-import com.tpdevproject.tab.AdapterTab;
-import com.tpdevproject.tab.SlidingTabLayout;
+import com.tpdevproject.parsers.Parser;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class SearchResultsActivity extends AppCompatActivity {
     private static final String TAG = "SearchResultActivity";
@@ -165,7 +144,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         Iterator<String> keys = response.keys();
         while(keys.hasNext()){
             String key = keys.next();
-            listAnnonce.add(AnnonceParser.parseAnnonce(key, response.getJSONObject(key)));
+            listAnnonce.add(Parser.parseAnnonce(key, response.getJSONObject(key)));
         }
 
         return listAnnonce;
