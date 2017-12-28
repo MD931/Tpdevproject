@@ -35,11 +35,31 @@
                 android:textColor="@android:color/black"
                 android:textSize="16dp" />
             <TextView
+                android:id="@+id/price_deal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="500 euro"
+                android:text="500"
+                android:textColor="@android:color/holo_red_dark"
                 android:layout_below="@id/item_title"
                 android:layout_toRightOf="@id/item_image"/>
+            <TextView
+                android:id="@+id/euro_deal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textColor="@android:color/holo_red_dark"
+                android:text="€"
+                android:layout_below="@id/item_title"
+                android:layout_toRightOf="@id/price_deal"/>
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="500 €"
+                android:layout_below="@id/item_title"
+                android:layout_toRightOf="@id/euro_deal"/>
+
             <TextView
                 android:id="@+id/item_time_elapsed"
                 android:layout_alignParentRight="true"

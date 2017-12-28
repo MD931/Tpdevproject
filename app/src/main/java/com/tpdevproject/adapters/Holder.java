@@ -1,6 +1,7 @@
 package com.tpdevproject.adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,14 +18,17 @@ public class Holder {
     public static class AnnonceViewHolder extends RecyclerView.ViewHolder {
         public View itemView;
         public ImageView view_image;
-        public TextView textView_title, textView_score;
-        public TextView textView_time_elapsed,
-                textView_number_coms, textView_username, textView_minus, textView_add;
+        public TextView textView_title, textView_score, textView_time_elapsed,
+                textView_number_coms, textView_price_deal, textView_price,
+                textView_username, textView_minus, textView_add;
 
         public AnnonceViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             textView_title = (TextView)itemView.findViewById(R.id.item_title);
+            textView_price_deal = (TextView) itemView.findViewById(R.id.price_deal);
+            textView_price = (TextView) itemView.findViewById(R.id.price);
+            textView_price.setVisibility(View.INVISIBLE);
             textView_score = (TextView)itemView.findViewById(R.id.item_score);
             textView_number_coms = (TextView)itemView.findViewById(R.id.item_number_coms);
             textView_username = (TextView)itemView.findViewById(R.id.item_username);
@@ -33,17 +37,28 @@ public class Holder {
             textView_minus = (TextView) itemView.findViewById(R.id.vote_minus);
             textView_time_elapsed = (TextView) itemView.findViewById(R.id.item_time_elapsed);
         }
+
         public void setTitle(String title)
         {
-            textView_title.setText(title+"");
+            textView_title.setText(title);
         }
-        public void setScore(int score)
-        {
-            textView_score.setText(score+"");
+        public void setPriceDeal(Double priceDeal){
+            textView_price_deal.setText(priceDeal.toString());
         }
-        public void setNumberComs(int numberComs)
+
+        public void setPrice(Double price){
+            textView_price.setText(price.toString()+" €");
+            textView_price.setPaintFlags(textView_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            textView_price.setVisibility(View.VISIBLE);
+        }
+
+        public void setScore(Integer score)
         {
-            textView_number_coms.setText(numberComs+"");
+            textView_score.setText(score.toString());
+        }
+        public void setNumberComs(Integer numberComs)
+        {
+            textView_number_coms.setText(numberComs.toString());
         }
         public void setUsername(String username)
         {
@@ -56,6 +71,18 @@ public class Holder {
                     //.placeholder(R.drawable.ic_launcher_background) //Put image if not exist
                     //.error(R.drawable.ic_launcher_background) // Put image if error
                     .into(view_image);
+        }
+
+        public void setVotedPlus(){
+            textView_minus.setEnabled(false);
+            textView_add.setTextColor(itemView.getResources().getColor(android.R.color.white));
+            textView_add.setBackground(itemView.getResources().getDrawable(R.drawable.circle_red));
+        }
+
+        public void setVotedMinus(){
+            textView_add.setEnabled(false);
+            textView_minus.setTextColor(itemView.getResources().getColor(android.R.color.white));
+            textView_minus.setBackground(itemView.getResources().getDrawable(R.drawable.circle_blue));
         }
     }
 }

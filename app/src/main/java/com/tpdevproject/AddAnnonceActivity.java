@@ -42,6 +42,7 @@ import java.util.Map;
 public class AddAnnonceActivity extends AppCompatActivity {
 
     private static final String TAG = "AddAnnonceActivity";
+
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
 
@@ -52,7 +53,8 @@ public class AddAnnonceActivity extends AppCompatActivity {
     private Uri uri;
 
     private ImageButton imgBtn;
-    private EditText title, description, price, link,dateBegin, dateEnd;
+    private EditText title, description, priceDeal, price,
+            link, address, dateBegin, dateEnd;
     private Button btnAdd;
     private ProgressBar progressBar;
 
@@ -76,8 +78,10 @@ public class AddAnnonceActivity extends AppCompatActivity {
         title = (EditText) findViewById(R.id.add_title);
         description = (EditText) findViewById(R.id.add_description);
         description.setSingleLine(false);
+        priceDeal = (EditText) findViewById(R.id.add_price_deal);
         price = (EditText) findViewById(R.id.add_price);
         link = (EditText) findViewById(R.id.add_link);
+        address = (EditText) findViewById(R.id.add_address);
         dateBegin = (EditText) findViewById(R.id.add_date_begin);
         dateEnd = (EditText) findViewById(R.id.add_date_end);
         btnAdd = (Button) findViewById(R.id.add_btn);
@@ -220,6 +224,9 @@ public class AddAnnonceActivity extends AppCompatActivity {
             value.put(Database.COLUMN_DESCRIPTION,
                     description.getText().toString());
 
+        if(!TextUtils.isEmpty(priceDeal.getText().toString()))
+            value.put(Database.COLUMN_PRICE_DEAL,
+                    Double.parseDouble(priceDeal.getText().toString()));
 
         if(!TextUtils.isEmpty(price.getText().toString()))
             value.put(Database.COLUMN_PRICE,
@@ -228,6 +235,10 @@ public class AddAnnonceActivity extends AppCompatActivity {
         if(!TextUtils.isEmpty(link.getText().toString()))
             value.put(Database.COLUMN_LINK,
                     link.getText().toString());
+
+        if(!TextUtils.isEmpty(address.getText().toString()))
+            value.put(Database.COLUMN_ADDRESS,
+                    address.getText().toString());
 
         if(!TextUtils.isEmpty(dateBegin.getText().toString()))
             value.put(Database.COLUMN_DATE_BEGIN,
@@ -255,6 +266,10 @@ public class AddAnnonceActivity extends AppCompatActivity {
         }
         if(TextUtils.isEmpty(description.getText().toString())){
             description.setError("Description required");
+            return false;
+        }
+        if(TextUtils.isEmpty(priceDeal.getText().toString())){
+            priceDeal.setError("Price Deal required");
             return false;
         }
         return true;

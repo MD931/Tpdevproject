@@ -33,6 +33,14 @@ public class ExampleUnitTest {
         assertTrue(DateTimeUtils.elapsedTimes(new Long(4),new Long(259200004)).equals("3d"));
     }
     @Test
+    public void elapsedTimesTest6() throws Exception {
+        assertTrue(DateTimeUtils.elapsedTimes(new Long(4),new Long(60007)).equals("1m"));
+    }
+    @Test
+    public void elapsedTimesTest7() throws Exception {
+        assertTrue(DateTimeUtils.elapsedTimes(new Long(1),new Long(3660001)).equals("1h"));
+    }
+    @Test
     public void elapsedTimesTestFail() throws Exception {
         assertFalse(DateTimeUtils.elapsedTimes(new Long(1000),new Long(200)).equals("1s"));
     }

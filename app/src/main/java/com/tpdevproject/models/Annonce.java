@@ -20,6 +20,9 @@ public class Annonce {
     @PropertyName("description")
     private String description;
 
+    @PropertyName("price_deal")
+    public Double priceDeal;
+
     @PropertyName("price")
     private Double price;
 
@@ -39,11 +42,16 @@ public class Annonce {
     private Map<String, Commentaire> commentaires = new HashMap<>();
 
     @PropertyName("order")
-
     private Integer order;
+
+    @PropertyName("address")
+    private String address;
 
     @PropertyName("votes")
     private Map<String, Integer> votes = new HashMap<>();
+
+    @PropertyName("favoris")
+    private Map<String, Integer> favoris = new HashMap<>();
 
     @PropertyName("user_id")
     public String userId;
@@ -52,13 +60,13 @@ public class Annonce {
     private String image;
     private int score;
 
-    public Annonce() {}  // Needed for Firebase
+    public Annonce() {}
 
 
     public Annonce(String id, String title, String description, Double price,
                    String link, String dateBegin, String dateEnd, Long datePost,
                    Map<String, Commentaire> commentaires,
-                   Integer order, Map<String, Integer> votes) {
+                   Integer order, String address, Map<String, Integer> votes, Map<String, Integer> favoris) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -69,8 +77,9 @@ public class Annonce {
         this.datePost = datePost;
         this.commentaires = commentaires;
         this.order = order;
+        this.address = address;
         this.votes = votes;
-
+        this.favoris = favoris;
     }
 
     public String getId() { return id; }
@@ -147,6 +156,14 @@ public class Annonce {
         this.votes = votes;
     }
 
+    public Map<String, Integer> getFavoris() {
+        return favoris;
+    }
+
+    public void setFavoris(Map<String, Integer> favoris) {
+        this.favoris = favoris;
+    }
+
     public int getNumberCommentaires(){
         return this.commentaires.size();
     }
@@ -159,6 +176,22 @@ public class Annonce {
     @Exclude
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Double getPriceDeal() {
+        return priceDeal;
+    }
+
+    public void setPriceDeal(Double priceDeal) {
+        this.priceDeal = priceDeal;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getUsername() {
@@ -191,6 +224,7 @@ public class Annonce {
                 +"id = "+id
                 +", title = "+title
                 +", description = "+description
+                +", priceDeal = "+priceDeal
                 +", price = "+price
                 +", link = "+link
                 +", dateBegin ="+dateBegin
@@ -198,10 +232,12 @@ public class Annonce {
                 +", datePost ="+datePost
                 +", commentaires ="+commentaires.toString()
                 +", order = "+order
+                +", address = "+address
                 +", votes = "+votes.toString()
+                +", favoris = "+favoris.toString()
                 +", userId = "+userId
-                +", image = "+image
                 +", score = "+score
+                +", image = "+image
                 +"}";
     }
 }

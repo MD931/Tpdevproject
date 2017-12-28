@@ -25,8 +25,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tpdevproject.DetailActivity;
 import com.tpdevproject.R;
+import com.tpdevproject.Utils.DateTimeUtils;
 import com.tpdevproject.models.Annonce;
 import com.tpdevproject.models.Database;
+import com.tpdevproject.adapters.Holder.AnnonceViewHolder;
 
 
 public class CategoryFragment extends Fragment {
@@ -107,21 +109,6 @@ public class CategoryFragment extends Fragment {
             protected void populateViewHolder(final AnnonceViewHolder viewHolder, final Annonce model, int position) {
                 Log.i(TAG, position+"");
                 Log.i(TAG, model.toString());
-                //Username
-                /*String userId = model.getUserId();
-                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
-                        .child(userId);
-                userRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        model.setUsername("12777");
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });*/
                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
                         .child(model.getUserId());
                 userRef.addValueEventListener(new ValueEventListener() {
@@ -138,12 +125,16 @@ public class CategoryFragment extends Fragment {
                 });
 
                 viewHolder.setTitle(model.getTitle());
+                viewHolder.setPriceDeal(model.getPriceDeal());
+                if(model.getPrice() != null)
+                    viewHolder.setPrice(model.getPrice());
                 viewHolder.setScore(model.getScore());
                 viewHolder.setNumberComs(model.getNumberCommentaires());
-                Log.i("populateViewHolder", ""+model.getUsername());
-                viewHolder.setUsername("aaaaa");
                 viewHolder.setImage(getContext(), model.getImage());
-                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                viewHolder.setTimeElapsed(
+                        DateTimeUtils.elapsedTimes(model.getDatePost()*-1
+                                ,System.currentTimeMillis()));
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent mIntent = new Intent(getContext(), DetailActivity.class);
@@ -157,14 +148,10 @@ public class CategoryFragment extends Fragment {
                     if(model.getVotes().containsKey(user.getUid())){
                         if (model.getVotes().get(user.getUid()) == 1){
                             //viewHolder.imageView_add.setBackgroundColor(getResources().getColor(android.R.color.black));
-                            viewHolder.textView_minus.setEnabled(false);
-                            viewHolder.textView_add.setTextColor(getResources().getColor(android.R.color.white));
-                            viewHolder.textView_add.setBackground(getResources().getDrawable(R.drawable.circle_red));
+                            viewHolder.setVotedPlus();
                         }else{
                             //viewHolder.imageView_minus.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                            viewHolder.textView_add.setEnabled(false);
-                            viewHolder.textView_minus.setTextColor(getResources().getColor(android.R.color.white));
-                            viewHolder.textView_minus.setBackground(getResources().getDrawable(R.drawable.circle_blue));
+                            viewHolder.setVotedMinus();
                         }
                     }
                 viewHolder.textView_score.setOnClickListener(new View.OnClickListener() {
@@ -209,46 +196,5 @@ public class CategoryFragment extends Fragment {
             }
         };
         recyclerView.setAdapter(recyclerAdapter);
-    }
-
-    public static class AnnonceViewHolder extends RecyclerView.ViewHolder {
-        private View mView;
-        private ImageView view_image;
-        private TextView textView_title, textView_score;
-        private TextView textView_number_coms, textView_username, textView_minus, textView_add;
-
-        public AnnonceViewHolder(View itemView) {
-            super(itemView);
-            mView=itemView;
-            textView_title = (TextView)itemView.findViewById(R.id.item_title);
-            textView_score = (TextView)itemView.findViewById(R.id.item_score);
-            textView_number_coms = (TextView)itemView.findViewById(R.id.item_number_coms);
-            textView_username = (TextView)itemView.findViewById(R.id.item_username);
-            view_image = (ImageView) itemView.findViewById(R.id.item_image);
-            textView_add = (TextView) itemView.findViewById(R.id.vote_add);
-            textView_minus = (TextView) itemView.findViewById(R.id.vote_minus);
-        }
-        public void setTitle(String title)
-        {
-            textView_title.setText(title+"");
-        }
-        public void setScore(int score)
-        {
-            textView_score.setText(score+"");
-        }
-        public void setNumberComs(int numberComs)
-        {
-            textView_number_coms.setText(numberComs+"");
-        }
-        public void setUsername(String username)
-        {
-            textView_username.setText(username);
-        }
-        public void setImage(Context context, String url) {
-            Picasso.with(context)
-                    .load(url)
-                    //.placeholder(R.drawable.ic_launcher_background) //Put image if not exist
-                    //.error(R.drawable.ic_launcher_background) // Put image if error
-                    .into(view_image);}
     }
 }

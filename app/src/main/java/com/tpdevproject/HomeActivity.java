@@ -168,7 +168,6 @@ public class HomeActivity extends AppCompatActivity /*implements NavigationView.
 
     private void setupTabs(){
         slidingTabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        slidingTabLayout.setSize(viewPager.getAdapter().getCount());
         slidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.colorAccent));
     }
 

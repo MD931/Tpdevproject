@@ -16,8 +16,10 @@ public class Database {
     public static String COLUMN_DATE_POST = "date_post";
     public static String COLUMN_TITLE = "title";
     public static String COLUMN_DESCRIPTION = "description";
+    public static String COLUMN_PRICE_DEAL = "price_deal";
     public static String COLUMN_PRICE = "price";
     public static String COLUMN_LINK = "link";
+    public static String COLUMN_ADDRESS = "address";
     public static String COLUMN_IMAGES = "images";
     public static String COLUMN_THUMBNAIL = "thumbnail";
     public static String COLUMN_ORDER = "order";

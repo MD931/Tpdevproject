@@ -79,21 +79,6 @@ public class NewFragment extends Fragment {
                     if(snapshot.hasChild(Database.COLUMN_IMAGES))
                         annonce.setImage(snapshot.child(Database.COLUMN_IMAGES)
                                 .child(Database.COLUMN_THUMBNAIL).getValue().toString());
-                    /*annonce.setUserId(snapshot.child(getResources().getString(R.string.column_user_id))
-                            .getValue().toString());
-                    /*
-                    userRef.child(userId)
-                            .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            annonce.setUsername("12");
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {}
-                    });*/
-
-                    //annonce.setUsername(userRef.child(userId).toString());
                     //Votes
                     int votes = 0;
                     for(DataSnapshot e : snapshot.child(Database.COLUMN_VOTES)
@@ -111,21 +96,6 @@ public class NewFragment extends Fragment {
             protected void populateViewHolder(final AnnonceViewHolder viewHolder, final Annonce model, int position) {
                 Log.i(TAG, position+"");
                 Log.i(TAG, model.toString());
-                //Username
-                /*String userId = model.getUserId();
-                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
-                        .child(userId);
-                userRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        model.setUsername("12777");
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });*/
                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
                         .child(model.getUserId());
                 userRef.addValueEventListener(new ValueEventListener() {
@@ -142,10 +112,11 @@ public class NewFragment extends Fragment {
                 });
 
                 viewHolder.setTitle(model.getTitle());
+                viewHolder.setPriceDeal(model.getPriceDeal());
+                if(model.getPrice() != null)
+                    viewHolder.setPrice(model.getPrice());
                 viewHolder.setScore(model.getScore());
                 viewHolder.setNumberComs(model.getNumberCommentaires());
-                Log.i("populateViewHolder", ""+model.getUsername());
-                viewHolder.setUsername("aaaaa");
                 viewHolder.setImage(getContext(), model.getImage());
                 viewHolder.setTimeElapsed(
                         DateTimeUtils.elapsedTimes(model.getDatePost()*-1
@@ -164,14 +135,10 @@ public class NewFragment extends Fragment {
                     if(model.getVotes().containsKey(user.getUid())){
                         if (model.getVotes().get(user.getUid()) == 1){
                             //viewHolder.imageView_add.setBackgroundColor(getResources().getColor(android.R.color.black));
-                            viewHolder.textView_minus.setEnabled(false);
-                            viewHolder.textView_add.setTextColor(getResources().getColor(android.R.color.white));
-                            viewHolder.textView_add.setBackground(getResources().getDrawable(R.drawable.circle_red));
+                            viewHolder.setVotedPlus();
                         }else{
                             //viewHolder.imageView_minus.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                            viewHolder.textView_add.setEnabled(false);
-                            viewHolder.textView_minus.setTextColor(getResources().getColor(android.R.color.white));
-                            viewHolder.textView_minus.setBackground(getResources().getDrawable(R.drawable.circle_blue));
+                            viewHolder.setVotedMinus();
                         }
                     }
                 viewHolder.textView_score.setOnClickListener(new View.OnClickListener() {

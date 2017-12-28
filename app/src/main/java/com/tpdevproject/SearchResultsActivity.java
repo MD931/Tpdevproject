@@ -43,6 +43,7 @@ import com.squareup.picasso.Picasso;
 import com.tpdevproject.adapters.AnnonceAdapter;
 import com.tpdevproject.models.Annonce;
 import com.tpdevproject.models.Database;
+import com.tpdevproject.parsers.AnnonceParser;
 import com.tpdevproject.tab.AdapterTab;
 import com.tpdevproject.tab.SlidingTabLayout;
 
@@ -164,53 +165,10 @@ public class SearchResultsActivity extends AppCompatActivity {
         Iterator<String> keys = response.keys();
         while(keys.hasNext()){
             String key = keys.next();
-            listAnnonce.add(parseAnnonce(key, response.getJSONObject(key)));
+            listAnnonce.add(AnnonceParser.parseAnnonce(key, response.getJSONObject(key)));
         }
 
         return listAnnonce;
-    }
-
-    private Annonce parseAnnonce(String id, JSONObject json) throws JSONException{
-        Annonce annonce = new Annonce();
-        annonce.setId(id);
-        if(json.has(Database.COLUMN_TITLE))
-            annonce.setTitle(json.getString(Database.COLUMN_TITLE));
-        if(json.has(Database.COLUMN_DESCRIPTION))
-            annonce.setDescription(json.getString(Database.COLUMN_DESCRIPTION));
-        if(json.has(Database.COLUMN_DATE_POST))
-            annonce.setDatePost(json.getLong(Database.COLUMN_DATE_POST));
-        if(json.has(Database.COLUMN_DATE_BEGIN))
-            annonce.setDateBegin(json.getString(Database.COLUMN_DATE_BEGIN));
-        if(json.has(Database.COLUMN_DATE_END))
-            annonce.setDateEnd(json.getString(Database.COLUMN_DATE_END));
-        if(json.has(Database.COLUMN_IMAGES))
-            if(json.getJSONObject(Database.COLUMN_IMAGES).has(Database.COLUMN_THUMBNAIL))
-                annonce.setImage(json.getJSONObject(Database.COLUMN_IMAGES)
-                        .getString(Database.COLUMN_THUMBNAIL));
-        if(json.has(Database.COLUMN_ORDER)) {
-            annonce.setOrder(json.getInt(Database.COLUMN_ORDER));
-            annonce.setScore(json.getInt(Database.COLUMN_ORDER)*-1);
-        }
-        if(json.has(Database.COLUMN_VOTES))
-            annonce.setVotes(parseVotes(json.getJSONObject(Database.COLUMN_VOTES)));
-        if(json.has(Database.COLUMN_PRICE))
-            annonce.setPrice(json.getDouble(Database.COLUMN_PRICE));
-        if(json.has(Database.COLUMN_LINK))
-            annonce.setLink(json.getString(Database.COLUMN_LINK));
-        if(json.has(Database.COLUMN_USER_ID))
-            annonce.setUserId(json.getString(Database.COLUMN_USER_ID));
-
-        return annonce;
-    }
-
-    private Map<String,Integer> parseVotes(JSONObject jsonObject) throws JSONException{
-        Map<String, Integer> m = new HashMap();
-        Iterator<String> keys = jsonObject.keys();
-        while(keys.hasNext()){
-            String key = keys.next();
-            m.put(key, jsonObject.getInt(key) );
-        }
-        return m;
     }
 
     private void hideProgressSearch(){

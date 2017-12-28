@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tpdevproject.DetailActivity;
 import com.tpdevproject.R;
+import com.tpdevproject.Utils.DateTimeUtils;
 import com.tpdevproject.models.Annonce;
 import com.tpdevproject.models.Database;
 
@@ -65,8 +66,14 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
         });
 
         holder.setTitle(listAnnonce.get(position).getTitle());
+        holder.setPriceDeal(listAnnonce.get(position).getPriceDeal());
+        if(listAnnonce.get(position).getPrice() != null)
+            holder.setPrice(listAnnonce.get(position).getPrice());
         holder.setScore(listAnnonce.get(position).getScore());
         holder.setNumberComs(listAnnonce.get(position).getNumberCommentaires());
+        holder.setTimeElapsed(
+                DateTimeUtils.elapsedTimes(listAnnonce.get(position).getDatePost()*-1
+                        ,System.currentTimeMillis()));
         //holder.setUsername();
         holder.setImage(context, listAnnonce.get(position).getImage());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -83,14 +90,10 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
             if(listAnnonce.get(position).getVotes().containsKey(user.getUid())){
                 if (listAnnonce.get(position).getVotes().get(user.getUid()) == 1){
                     //viewHolder.imageView_add.setBackgroundColor(getResources().getColor(android.R.color.black));
-                    holder.textView_minus.setEnabled(false);
-                    holder.textView_add.setTextColor(context.getResources().getColor(android.R.color.white));
-                    holder.textView_add.setBackground(context.getResources().getDrawable(R.drawable.circle_red));
+                    holder.setVotedPlus();
                 }else{
                     //viewHolder.imageView_minus.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                    holder.textView_add.setEnabled(false);
-                    holder.textView_minus.setTextColor(context.getResources().getColor(android.R.color.white));
-                    holder.textView_minus.setBackground(context.getResources().getDrawable(R.drawable.circle_blue));
+                    holder.setVotedMinus();
                 }
             }
         holder.textView_score.setOnClickListener(new View.OnClickListener() {
