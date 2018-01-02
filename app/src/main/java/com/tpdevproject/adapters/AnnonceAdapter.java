@@ -35,7 +35,7 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
     private FirebaseUser user;
     private DatabaseReference annonceRef;
 
-    public AnnonceAdapter(List<Annonce> listAnnonce, Context context, FirebaseUser user, DatabaseReference annonceRef){
+    public AnnonceAdapter(List<Annonce> listAnnonce, Context context, FirebaseUser user, DatabaseReference annonceRef) {
         this.listAnnonce = listAnnonce;
         this.context = context;
         this.user = user;
@@ -44,14 +44,14 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
 
     @Override
     public Holder.AnnonceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        CardView item = (CardView)LayoutInflater.from(parent.getContext())
+        CardView item = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item, parent, false);
         return new Holder.AnnonceViewHolder(item);
     }
 
 
     @Override
-    public void onBindViewHolder(final Holder.AnnonceViewHolder holder,final int position) {
+    public void onBindViewHolder(final Holder.AnnonceViewHolder holder, final int position) {
         //Jointure pour récuperer le username de l'utilisateur
         DatabaseReference userRef = FirebaseDatabase.getInstance()
                 .getReference(Database.TABLE_USERS)
@@ -61,19 +61,39 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
             public void onDataChange(DataSnapshot dataSnapshot) {
                 holder.setUsername(dataSnapshot.child("username").getValue().toString());
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        annonceRef.child(listAnnonce.get(position).getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Annonce annonce = dataSnapshot.getValue(Annonce.class);
+                Log.i("AnnonceAdapter", annonce.toString());
+                listAnnonce.get(position).setVotes(annonce.getVotes());
+                if (listAnnonce.get(position).getOrder() !=  annonce.getOrder()) {
+                    listAnnonce.get(position).setOrder(annonce.getOrder());
+                    notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
         });
 
         holder.setTitle(listAnnonce.get(position).getTitle());
         holder.setPriceDeal(listAnnonce.get(position).getPriceDeal());
-        if(listAnnonce.get(position).getPrice() != null)
+        if (listAnnonce.get(position).getPrice() != null)
             holder.setPrice(listAnnonce.get(position).getPrice());
-        holder.setScore(listAnnonce.get(position).getScore());
+        holder.setScore(listAnnonce.get(position).getOrder()*-1);
         holder.setNumberComs(listAnnonce.get(position).getNumberCommentaires());
         holder.setTimeElapsed(
-                DateTimeUtils.elapsedTimes(listAnnonce.get(position).getDatePost()*-1
-                        ,System.currentTimeMillis()));
+                DateTimeUtils.elapsedTimes(listAnnonce.get(position).getDatePost() * -1
+                        , System.currentTimeMillis()));
         //holder.setUsername();
         holder.setImage(context, listAnnonce.get(position).getImage());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -86,12 +106,12 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
                 context.startActivity(mIntent);
             }
         });
-        if(user!=null)
-            if(listAnnonce.get(position).getVotes().containsKey(user.getUid())){
-                if (listAnnonce.get(position).getVotes().get(user.getUid()) == 1){
+        if (user != null)
+            if (listAnnonce.get(position).getVotes().containsKey(user.getUid())) {
+                if (listAnnonce.get(position).getVotes().get(user.getUid()) == 1) {
                     //viewHolder.imageView_add.setBackgroundColor(getResources().getColor(android.R.color.black));
                     holder.setVotedPlus();
-                }else{
+                } else {
                     //viewHolder.imageView_minus.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
                     holder.setVotedMinus();
                 }
@@ -105,15 +125,16 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
         holder.textView_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user != null){
-                    Log.i("votes","add");
-                    if(!listAnnonce.get(position).getVotes().containsKey(user.getUid())) {
+                if (user != null) {
+                    Log.i("votes", "add");
+                    if (!listAnnonce.get(position).getVotes().containsKey(user.getUid())) {
                         annonceRef.child(listAnnonce.get(position).getId()).child("votes")
                                 .child(user.getUid()).setValue(1);
                         annonceRef.child(listAnnonce.get(position).getId()).child("order")
-                                .setValue(listAnnonce.get(position).getOrder()-1);
+                                .setValue(listAnnonce.get(position).getOrder() - 1);
+                        //notifyDataSetChanged();
                     }
-                }else{
+                } else {
                     Toast.makeText(context, "Please Login before", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -122,15 +143,16 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
         holder.textView_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user != null){
-                    Log.i("votes","minus");
-                    if(!listAnnonce.get(position).getVotes().containsKey(user.getUid())) {
+                if (user != null) {
+                    Log.i("votes", "minus");
+                    if (!listAnnonce.get(position).getVotes().containsKey(user.getUid())) {
                         annonceRef.child(listAnnonce.get(position).getId()).child("votes")
                                 .child(user.getUid()).setValue(-1);
                         annonceRef.child(listAnnonce.get(position).getId()).child("order")
-                                .setValue(listAnnonce.get(position).getOrder()+1);
+                                .setValue(listAnnonce.get(position).getOrder() + 1);
+                        //notifyDataSetChanged();
                     }
-                }else{
+                } else {
                     Toast.makeText(context, "Please Login before", Toast.LENGTH_SHORT).show();
                 }
             }

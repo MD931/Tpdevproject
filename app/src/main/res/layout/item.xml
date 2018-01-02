@@ -85,7 +85,6 @@
                 android:layout_marginLeft="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="username"
                 android:textColor="@android:color/black"
                 />
             <TextView
