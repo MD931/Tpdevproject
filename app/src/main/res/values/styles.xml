@@ -23,18 +23,4 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <!-- Base application theme. -->
-    <style name="AppThemeLogin" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimaryLogin</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryLogin</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppThemeLogin.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
 </resources>

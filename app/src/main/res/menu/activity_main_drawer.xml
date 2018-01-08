@@ -3,26 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+   <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_login"
-            android:icon="@drawable/ic_launcher_foreground"
+            android:icon="@drawable/ic_action_add"
             android:title="Login" />
         <item
             android:id="@+id/nav_profil"
-            android:icon="@drawable/ic_launcher_foreground"
             android:title="Profil" />
         <item
             android:id="@+id/nav_favoris"
-            android:icon="@drawable/ic_launcher_foreground"
             android:title="Favoris" />
         <item
             android:id="@+id/nav_maps"
-            android:icon="@drawable/ic_launcher_foreground"
             android:title="Maps" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_launcher_foreground"
             android:title="Logout" />
 
     </group>

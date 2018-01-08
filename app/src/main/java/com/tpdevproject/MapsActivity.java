@@ -6,6 +6,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
@@ -14,6 +17,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,8 +31,13 @@ import com.tpdevproject.parsers.Parser;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,25 +47,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
 
-/**
- * This demo shows how GMS Location can be used to check for changes to the users location.  The
- * "My Location" button uses GMS Location to set the blue dot representing the users location.
- * Permission for {@link android.Manifest.permission#ACCESS_FINE_LOCATION} is requested at run
- * time. If the permission has not been granted, the Activity is finished with an error message.
- */
 public class MapsActivity extends AppCompatActivity
         implements
         OnMyLocationButtonClickListener,
@@ -69,6 +69,8 @@ public class MapsActivity extends AppCompatActivity
      */
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
+    private static final int CAMERA_ZOOM = 13;
+
     /**
      * Flag indicating whether a requested permission has been denied after returning in
      * {@link #onRequestPermissionsResult(int, String[], int[])}.
@@ -77,11 +79,14 @@ public class MapsActivity extends AppCompatActivity
 
     private GoogleMap mMap;
 
+    private FusedLocationProviderClient mFusedLocationClient;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -98,10 +103,17 @@ public class MapsActivity extends AppCompatActivity
         annonceRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("MapsActivity", "onDataChange : "+dataSnapshot.toString());
+                Log.i("MapsActivity", "onDataChange : " + dataSnapshot.toString());
                 Iterator<DataSnapshot> data = dataSnapshot.getChildren().iterator();
-                while(data.hasNext()){
+                while (data.hasNext()) {
                     DataSnapshot e = data.next();
+                    /*String address = e.child("address").getValue(String.class);
+                    LatLng latLng = getLocationFromAddress(address);
+                    if(latLng != null) {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(address));
+                    }*/
                     showResults(e.child("address").getValue(String.class));
                 }
 
@@ -112,7 +124,7 @@ public class MapsActivity extends AppCompatActivity
 
             }
         });
-        
+
         enableMyLocation();
     }
 
@@ -138,16 +150,26 @@ public class MapsActivity extends AppCompatActivity
 
 
     private void centerMapOnMyLocation() {
-
-        Location location = mMap.getMyLocation();
-
-        if (location != null) {
-            LatLng myLocation = new LatLng(location.getLatitude(),
-                    location.getLongitude());
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,
-                    20));
+        Log.i("MapsActivity", "centerMapOnMyLocation");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        zoomOnLocation(location);
+                    }
+                });
 
+    }
+
+    private void zoomOnLocation(Location location){
+        if(location != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
+                            location.getLongitude()),
+                    CAMERA_ZOOM));
+        }
     }
 
     @Override
@@ -211,6 +233,23 @@ public class MapsActivity extends AppCompatActivity
             }
         });
         mQueue.add(jsonObjectRequest);
+    }
+
+    public LatLng getLocationFromAddress(String strAddress){
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        try {
+            address = coder.getFromLocationName(strAddress,5);
+            if (address!=null && address.size()>0 ) {
+                Address location=address.get(0);
+                return new LatLng(location.getLatitude(), location.getLongitude());
+
+            }
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

@@ -37,8 +37,8 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/hint_email"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/textColorPrimary"
-                android:textColorHint="@color/textColorPrimary" />
+                android:textColor="@color/textColorLogin"
+                android:textColorHint="@color/textColorLogin" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -52,8 +52,8 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/hint_password"
                 android:inputType="textPassword"
-                android:textColor="@color/textColorPrimary"
-                android:textColorHint="@color/textColorPrimary" />
+                android:textColor="@color/textColorLogin"
+                android:textColorHint="@color/textColorLogin" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Login Button -->
@@ -65,7 +65,7 @@
             android:layout_marginTop="20dip"
             android:background="@color/colorAccent"
             android:text="@string/btn_login"
-            android:textColor="@color/textColorPrimary" />
+            android:textColor="@color/textColorLogin" />
 
         <Button
             android:id="@+id/btn_google_login"
@@ -96,7 +96,7 @@
             android:background="@null"
             android:text="@string/btn_link_to_register"
             android:textAllCaps="false"
-            android:textColor="@color/textColorPrimary"
+            android:textColor="@color/textColorLogin"
             android:textSize="15dp" />
 
         <ProgressBar
