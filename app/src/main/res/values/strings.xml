@@ -50,5 +50,6 @@
     <string name="no_result">No result</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_favorites">FavoritesActivity</string>
+    <string name="title_activity_profil">ProfilActivity</string>
 
 </resources>

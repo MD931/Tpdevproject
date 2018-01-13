@@ -135,11 +135,10 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.nav_login) {
             startLoginActivity();
         } else if (id == R.id.nav_profil) {
-            //TODO
+            startProfilActivity();
         } else if (id == R.id.nav_favoris) {
             startFavorisActivity();
         } else if (id == R.id.nav_maps) {
@@ -152,7 +151,7 @@ public class HomeActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     private void initializeVars(){
@@ -211,6 +210,12 @@ public class HomeActivity extends AppCompatActivity
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
     }
+
+    private void startProfilActivity() {
+        Intent intent = new Intent(getApplicationContext(), ProfilActivity.class);
+        startActivity(intent);
+    }
+
 
     private void startFavorisActivity() {
         Intent intent = new Intent(getApplicationContext(), FavorisActivity.class);
