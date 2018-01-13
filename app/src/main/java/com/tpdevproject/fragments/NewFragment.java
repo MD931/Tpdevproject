@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import com.tpdevproject.DetailActivity;
 import com.tpdevproject.R;
 import com.tpdevproject.Utils.DateTimeUtils;
+import com.tpdevproject.Utils.SnackBarUtils;
 import com.tpdevproject.adapters.Holder;
 import com.tpdevproject.models.Annonce;
 import com.tpdevproject.models.Database;
@@ -71,6 +72,7 @@ public class NewFragment extends Fragment {
         ) {
             @Override
             protected Annonce parseSnapshot(DataSnapshot snapshot) {
+                Log.i(TAG, "parseSnapshot");
                 final Annonce annonce = super.parseSnapshot(snapshot);
                 if (annonce != null){
                     annonce.setId(snapshot.getKey());
@@ -87,8 +89,12 @@ public class NewFragment extends Fragment {
                         votes += Integer.parseInt(e.getValue().toString());
                     }
                     annonce.setScore(votes);
+
+                    //Commentaires
+                    if(snapshot.hasChild(Database.COLUMN_COMMENTAIRES)){
+                        annonce.setNumberCommentaires(snapshot.child(Database.COLUMN_COMMENTAIRES).getChildrenCount());
+                    }
                 }
-                Log.i(TAG, "parse : "+annonce.getUsername());
                 return annonce;
             }
 
@@ -159,7 +165,7 @@ public class NewFragment extends Fragment {
                                         .setValue(model.getOrder()-1);
                             }
                         }else{
-                            Toast.makeText(getContext(), "Please Login before", Toast.LENGTH_SHORT).show();
+                            SnackBarUtils.showSnackBarLogin(view, getContext());
                         }
                     }
                 });
@@ -176,7 +182,7 @@ public class NewFragment extends Fragment {
                                         .setValue(model.getOrder()+1);
                             }
                         }else{
-                            Toast.makeText(getContext(), "Please Login before", Toast.LENGTH_SHORT).show();
+                            SnackBarUtils.showSnackBarLogin(view, getContext());
                         }
                     }
                 });

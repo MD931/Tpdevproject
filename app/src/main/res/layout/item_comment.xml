@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/comment_image_user"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/ic_launcher_round"/>
+    <TextView
+        android:id="@+id/comment_username"
+        android:layout_toRightOf="@id/comment_image_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="amazigh_argas"
+        android:textColor="@android:color/black"
+        />
+    <TextView
+        android:id="@+id/comment_date"
+        android:layout_toRightOf="@id/comment_image_user"
+        android:layout_below="@+id/comment_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="28 Novembre 2017" />
+    <TextView
+        android:id="@+id/comment_text"
+        android:layout_toRightOf="@id/comment_image_user"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/comment_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:text="Ceci est mon premier commentaire" />
+    <include
+        android:layout_marginTop="10dp"
+        layout="@layout/separation_line"
+        android:layout_width="wrap_content"
+        android:layout_height= "0.5dp"
+        android:layout_below="@+id/comment_text"
+        />
+</RelativeLayout>

@@ -26,6 +26,7 @@
     <string name="hint_price_deal">Price Deal*</string>
     <string name="hint_price">Price</string>
     <string name="hint_link">Link</string>
+    <string name="hint_add_comment">Add comment...</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_google_login">Login with Google</string>
     <string name="btn_link_to_register">Not a member? Get registered in Firebase now!</string>
@@ -48,7 +49,15 @@
     <string name="auth_with_google_failed">Authentication failed.</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="no_result">No result</string>
+    <string name="add_to_favorite">Added to favorite</string>
+    <string name="remove_from_favorite">Removed from favorite</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_favorites">FavoritesActivity</string>
+    <string name="title_activity_favorites">My favorites</string>
+    <string name="description">Description :</string>
+    <string name="comments">Comments :</string>
+    <string name="posted_in">Posted : </string>
+    <string name="begin_in">Begin : </string>
+    <string name="end_in">Expire : </string>
+    <string name="no_comments">No comments.</string>
 
 </resources>

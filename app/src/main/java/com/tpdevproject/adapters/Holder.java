@@ -2,6 +2,7 @@ package com.tpdevproject.adapters;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -56,7 +57,7 @@ public class Holder {
         {
             textView_score.setText(score.toString());
         }
-        public void setNumberComs(Integer numberComs)
+        public void setNumberComs(Long numberComs)
         {
             textView_number_coms.setText(numberComs.toString());
         }
@@ -84,5 +85,40 @@ public class Holder {
             textView_minus.setTextColor(itemView.getResources().getColor(android.R.color.white));
             textView_minus.setBackground(itemView.getResources().getDrawable(R.drawable.circle_blue));
         }
+    }
+
+    public static class CommentaireViewHolder extends RecyclerView.ViewHolder {
+        public View itemView;
+        public ImageView view_image;
+        public TextView textView_username, textView_date_post, textView_commentaire;
+
+        public CommentaireViewHolder(View itemView) {
+            super(itemView);
+            this.itemView = itemView;
+            view_image = (ImageView) itemView.findViewById(R.id.comment_image_user);
+            textView_username = (TextView) itemView.findViewById(R.id.comment_username);
+            textView_date_post = (TextView) itemView.findViewById(R.id.comment_date);
+            textView_commentaire = (TextView) itemView.findViewById(R.id.comment_text);
+        }
+
+        public void setImage(Context context, String url) {
+            Picasso.with(context)
+                    .load(url)
+                    .into(view_image);
+        }
+
+        public void setUsername(String username)
+        {
+            textView_username.setText(username);
+        }
+
+        public void setDatePost(String date){
+            textView_date_post.setText(date);
+        }
+
+        public void setCommentaire(String text){
+            textView_commentaire.setText(text);
+        }
+
     }
 }

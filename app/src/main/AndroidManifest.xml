@@ -48,7 +48,7 @@
             android:label="@string/title_activity_add_annonce"
             android:theme="@style/AppTheme" />
         <activity android:name=".SetupActivity" />
-        <activity android:name=".DetailActivity">
+        <activity android:name=".DetailActivity" android:windowSoftInputMode="adjustResize">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 

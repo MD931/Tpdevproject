@@ -9,29 +9,40 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.tpdevproject.Utils.SnackBarUtils;
+import com.tpdevproject.adapters.Holder;
 import com.tpdevproject.models.Annonce;
+import com.tpdevproject.models.Commentaire;
 import com.tpdevproject.models.Database;
 
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DetailActivity extends AppCompatActivity {
     private final static String TAG = "DetailActivity";
@@ -39,21 +50,32 @@ public class DetailActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private FirebaseUser user;
-    private ImageView toolbarImage, share, favoris;
-    private TextView title, description, username, score, vote_plus,
-            vote_minus, datePost1, datePost2, dateBegin, dateEnd;
+    private ImageView toolbarImage, share, favoris, addComment;
+    private TextView title, description, username, score, votePlus,
+            voteMinus, datePost1, datePost2, dateBegin, dateEnd,
+            comment, no_comment;
+    private RecyclerView recyclerView;
     private LinearLayout holderBegin, holderEnd;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private DatabaseReference refAnnonce;
+    private DatabaseReference annonceRef, userRef;
     private String idDeal;
     private Annonce annonce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         idDeal = handleIntent(getIntent());
         initializeVars();
+        //initializeListeners();
+    }
+
+    @Override
+    public void onStart(){
+        Log.i(TAG, "onStart");
+        super.onStart();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         initializeListeners();
     }
 
@@ -72,21 +94,24 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initializeVars() {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MODE_CHANGED);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarImage = (ImageView) findViewById(R.id.image_toolbar);
         title = (TextView) findViewById(R.id.detail_title);
         description = (TextView) findViewById(R.id.detail_description);
         username = (TextView) findViewById(R.id.detail_username);
         score = (TextView) findViewById(R.id.item_score);
-        vote_plus = (TextView) findViewById(R.id.vote_add);
-        vote_minus = (TextView) findViewById(R.id.vote_minus);
+        votePlus = (TextView) findViewById(R.id.vote_add);
+        voteMinus = (TextView) findViewById(R.id.vote_minus);
         holderBegin = (LinearLayout) findViewById(R.id.holder_date_begin);
         holderEnd = (LinearLayout) findViewById(R.id.holder_date_end);
         datePost1 = (TextView) findViewById(R.id.detail_date_post1);
         datePost2 = (TextView) findViewById(R.id.detail_date_post2);
         dateBegin = (TextView) findViewById(R.id.detail_date_begin);
         dateEnd = (TextView) findViewById(R.id.detail_date_end);
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        no_comment = (TextView) findViewById(R.id.detail_no_comment);
+        addComment = (ImageView) findViewById(R.id.detail_btn_comment);
+        comment = (TextView) findViewById(R.id.detail_comment);
         if (idDeal == null) idDeal = getIntent().getExtras().getString(ID_DEAL);
         annonce = null;
         toolbar.setTitle("Deal");
@@ -99,14 +124,16 @@ public class DetailActivity extends AppCompatActivity {
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
 
-        refAnnonce = FirebaseDatabase.getInstance().getReference().child("annonce");
+        annonceRef = FirebaseDatabase.getInstance().getReference().child("annonce");
+        userRef = FirebaseDatabase.getInstance().getReference().child("users");
 
         share = (ImageView) findViewById(R.id.share);
         favoris = (ImageView) findViewById(R.id.favoris);
+        bindRecyclerView();
     }
 
     private void initializeListeners() {
-        refAnnonce.child(idDeal).addValueEventListener(new ValueEventListener() {
+        annonceRef.child(idDeal).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 bindDataOnView(dataSnapshot);
@@ -118,15 +145,15 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        vote_plus.setOnClickListener(new View.OnClickListener() {
+        votePlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (user != null) {
-                    Log.i("votes", "add");
+                    Log.i(TAG, "VotePlus, onClick");
                     if (!annonce.getVotes().containsKey(user.getUid())) {
-                        refAnnonce.child(annonce.getId()).child("votes")
+                        annonceRef.child(annonce.getId()).child("votes")
                                 .child(user.getUid()).setValue(1);
-                        refAnnonce.child(annonce.getId()).child("order")
+                        annonceRef.child(annonce.getId()).child("order")
                                 .setValue(annonce.getOrder() - 1);
                     }
                 } else {
@@ -135,15 +162,16 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        vote_minus.setOnClickListener(new View.OnClickListener() {
+        voteMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (user != null) {
-                    Log.i("votes", "minus");
+
+                    Log.i(TAG, "VoteMinus, onClick");
                     if (!annonce.getVotes().containsKey(user.getUid())) {
-                        refAnnonce.child(annonce.getId()).child("votes")
+                        annonceRef.child(annonce.getId()).child("votes")
                                 .child(user.getUid()).setValue(-1);
-                        refAnnonce.child(annonce.getId()).child("order")
+                        annonceRef.child(annonce.getId()).child("order")
                                 .setValue(annonce.getOrder() + 1);
                     }
                 } else {
@@ -155,32 +183,92 @@ public class DetailActivity extends AppCompatActivity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i(TAG, "Share, onClick");
                 share();
             }
         });
 
         favoris.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 if (user != null) {
                     Log.i(TAG, "Favoris, onClick");
                     if (annonce.getFavoris().containsKey(user.getUid())) {
                         if (annonce.getFavoris().get(user.getUid()) == 1) {
-                            refAnnonce.child(annonce.getId()).child("favoris")
-                                    .child(user.getUid()).setValue(0);
+                            annonceRef.child(annonce.getId()).child(Database.COLUMN_FAVORIS)
+                                    .child(user.getUid()).setValue(0, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    if(databaseError==null) {
+                                        SnackBarUtils.showSnackBarMessage(findViewById(R.id.id_detail_activity)
+                                                , getResources()
+                                                        .getString(R.string.remove_from_favorite));
+                                    }
+                                }
+                            });
                         } else {
-                            refAnnonce.child(annonce.getId()).child("favoris")
-                                    .child(user.getUid()).setValue(1);
+                            annonceRef.child(annonce.getId()).child(Database.COLUMN_FAVORIS)
+                                    .child(user.getUid()).setValue(1, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    if(databaseError==null) {
+                                        SnackBarUtils.showSnackBarMessage(findViewById(R.id.id_detail_activity)
+                                                , getResources()
+                                                        .getString(R.string.add_to_favorite));
+                                    }
+                                }
+                            });
                         }
                     } else {
-                        refAnnonce.child(annonce.getId()).child("favoris")
-                                .child(user.getUid()).setValue(1);
+                        annonceRef.child(annonce.getId()).child(Database.COLUMN_FAVORIS)
+                                .child(user.getUid()).setValue(1, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if(databaseError==null) {
+                                    SnackBarUtils.showSnackBarMessage(findViewById(R.id.id_detail_activity)
+                                            , getResources()
+                                                    .getString(R.string.add_to_favorite));
+                                }
+                            }
+                        });
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please Login before", Toast.LENGTH_SHORT).show();
+                    SnackBarUtils.showSnackBarLogin(findViewById(R.id.id_detail_activity), getApplicationContext());
                 }
             }
         });
+
+        addComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (user != null) {
+                    if (TextUtils.isEmpty(comment.getText())) {
+                        return;
+                    }
+                    Map<String, Object> val = generateMapOfField();
+                    DatabaseReference tmp = annonceRef.child(idDeal).child(Database.COLUMN_COMMENTAIRES)
+                            .push();
+                    tmp.setValue(val);
+                    comment.setText("");
+                }else {
+                    SnackBarUtils.showSnackBarLogin(view, getApplicationContext());
+                }
+            }
+        });
+    }
+
+
+    private HashMap<String, Object> generateMapOfField() {
+        HashMap<String, Object> value = new HashMap<>();
+
+        value.put(Database.COLUMN_USER_ID,user.getUid());
+
+        value.put(Database.COLUMN_DATE_POST,
+                ServerValue.TIMESTAMP);
+
+        value.put(Database.COLUMN_COMMENTAIRE, comment.getText().toString());
+
+        return value;
     }
 
     private void share() {
@@ -231,10 +319,8 @@ public class DetailActivity extends AppCompatActivity {
         if (user != null) {
             if (annonce.getVotes().containsKey(user.getUid())) {
                 if (annonce.getVotes().get(user.getUid()) == 1) {
-                    //viewHolder.imageView_add.setBackgroundColor(getResources().getColor(android.R.color.black));
                     setVotedPlus();
                 } else {
-                    //viewHolder.imageView_minus.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
                     setVotedMinus();
                 }
             }
@@ -251,7 +337,7 @@ public class DetailActivity extends AppCompatActivity {
 
 
         /* DATE */
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy MMM dd hh:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy MMM dd HH:mm");
         datePost1.setText(formatter.format(new Date(annonce.getDatePost() * -1)));
         datePost2.setText(formatter.format(new Date(annonce.getDatePost() * -1)));
         formatter = new SimpleDateFormat("yyyy MMM dd");
@@ -259,17 +345,112 @@ public class DetailActivity extends AppCompatActivity {
             String[] date = annonce.getDateBegin().split("/");
             dateBegin.setText(formatter.format(new Date(date[1] + "/" + date[0] + "/" + date[2])));
         } else {
-            holderBegin.setVisibility(View.INVISIBLE);
+            holderBegin.setVisibility(View.GONE);
         }
         if (annonce.getDateEnd() != null) {
             String[] date = annonce.getDateEnd().split("/");
             Log.i(TAG, date[0] + " " + date[1] + " " + date[2]);
             dateEnd.setText(formatter.format(new Date(date[1] + "/" + date[0] + "/" + date[2])));
         } else {
-            holderEnd.setVisibility(View.INVISIBLE);
+            holderEnd.setVisibility(View.GONE);
         }
         /* FIN DATE */
 
+    }
+
+    private void bindRecyclerView(){
+        recyclerView = (RecyclerView) findViewById(R.id.info_comments);
+        //recyclerView.setHasFixedSize(true);
+        DatabaseReference dbRef = annonceRef.child(idDeal).child("commentaires");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i(TAG, "addListenerForSingleValueEvent onDataChange : "+dataSnapshot.getChildrenCount());
+                if(dataSnapshot.getChildrenCount()>0){
+                    recyclerView.setVisibility(View.VISIBLE);
+                    no_comment.setVisibility(View.GONE);
+                }else{
+                    recyclerView.setVisibility(View.GONE);
+                    no_comment.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        final FirebaseRecyclerAdapter<Commentaire,Holder.CommentaireViewHolder> recyclerAdapter=new FirebaseRecyclerAdapter<Commentaire,Holder.CommentaireViewHolder>(
+                Commentaire.class,
+                R.layout.item_comment,
+                Holder.CommentaireViewHolder.class,
+                dbRef
+        ) {
+            @Override
+            protected Commentaire parseSnapshot(DataSnapshot snapshot) {
+                Log.i(TAG, "parseSnapshot");
+                final Commentaire commentaire = super.parseSnapshot(snapshot);
+                if (commentaire != null){
+                    Log.i(TAG, "parseSnapshot : "+commentaire.toString());
+                    //commentaire.setId(snapshot.getKey());
+                }
+                return commentaire;
+            }
+
+            @Override
+            protected void populateViewHolder(final Holder.CommentaireViewHolder viewHolder, final Commentaire model, int position) {
+                Log.i(TAG, position+"");
+                Log.i(TAG, model.toString());
+                userRef.child(model.getUserId()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.i(TAG, "onDataChange :"+dataSnapshot.child("username"));
+                        viewHolder.setUsername(dataSnapshot.child("username").getValue().toString());
+                        if(dataSnapshot.hasChild(Database.COLUMN_IMAGE_PROFILE))
+                            viewHolder.setImage(getApplicationContext(),
+                                    dataSnapshot.child(Database.COLUMN_IMAGE_PROFILE).getValue().toString());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.i(TAG, "oncCancelled ValueEventListener");
+                    }
+                });
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy MMM dd HH:mm");
+                viewHolder.setDatePost(formatter.format(new Date(model.getDatePost())));
+                viewHolder.setCommentaire(model.getCommentaire());
+            }
+        };
+        RecyclerView.AdapterDataObserver mObserver = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                Log.i(TAG, "onItemRangeInserted : "+recyclerAdapter.getItemCount());
+                if(recyclerAdapter.getItemCount()>0){
+                    recyclerView.setVisibility(View.VISIBLE);
+                    no_comment.setVisibility(View.GONE);
+                }else{
+                    recyclerView.setVisibility(View.GONE);
+                    no_comment.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                Log.i(TAG, "onItemRangeRemoved : "+recyclerAdapter.getItemCount());
+                if(recyclerAdapter.getItemCount()>0){
+                    recyclerView.setVisibility(View.VISIBLE);
+                    no_comment.setVisibility(View.GONE);
+                }else{
+                    recyclerView.setVisibility(View.GONE);
+                    no_comment.setVisibility(View.VISIBLE);
+                }
+            }
+        };
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerAdapter.registerAdapterDataObserver(mObserver);
     }
 
     private void picassoLoader(Context context, ImageView imageView, String url) {
@@ -283,15 +464,15 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void setVotedPlus() {
-        vote_minus.setEnabled(false);
-        vote_plus.setTextColor(getResources().getColor(android.R.color.white));
-        vote_plus.setBackground(getResources().getDrawable(R.drawable.circle_red));
+        voteMinus.setEnabled(false);
+        votePlus.setTextColor(getResources().getColor(android.R.color.white));
+        votePlus.setBackground(getResources().getDrawable(R.drawable.circle_red));
     }
 
     public void setVotedMinus() {
-        vote_plus.setEnabled(false);
-        vote_minus.setTextColor(getResources().getColor(android.R.color.white));
-        vote_minus.setBackground(getResources().getDrawable(R.drawable.circle_blue));
+        votePlus.setEnabled(false);
+        voteMinus.setTextColor(getResources().getColor(android.R.color.white));
+        voteMinus.setBackground(getResources().getDrawable(R.drawable.circle_blue));
     }
 
     @Override

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btn_link_to_register">Pas encore membre? Enregistrez vous maintenant avec Firebase!</string>
+    <string name="btn_link_to_login">Déjà membre. Connectez vous!</string>
+    <string name="btn_forgot_password">Vous avez oublié votre mot de passe?</string>
+    <string name="btn_reset_password">Réinitialiser votre mot de passe</string>
+    <string name="btn_back"><![CDATA[<< Retour]]></string>
+    <string name="login_before">Veuillez vous authentifiez avant</string>
+    <string name="login">Connexion</string>
+    <string name="title_activity_favorites">Mes favoris</string>
+    <string name="add_to_favorite">Ajouté aux favoris</string>
+    <string name="remove_from_favorite">Supprimé des favoris</string>
+    <string name="description">Description :</string>
+    <string name="comments">Commentaires :</string>
+    <string name="posted_in">Posté le : </string>
+    <string name="begin_in">Débute le : </string>
+    <string name="end_in">Expire le : </string>
+    <string name="no_comments">Aucun commentaire.</string>
+</resources>

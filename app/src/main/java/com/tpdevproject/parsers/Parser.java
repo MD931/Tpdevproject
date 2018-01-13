@@ -41,6 +41,8 @@ public class Parser {
             annonce.setPriceDeal(json.getDouble(Database.COLUMN_PRICE_DEAL));
         if(json.has(Database.COLUMN_ADDRESS))
             annonce.setAddress(json.getString(Database.COLUMN_ADDRESS));
+        if(json.has(Database.COLUMN_COMMENTAIRES))
+            annonce.setNumberCommentaires(new Long(json.getJSONObject(Database.COLUMN_COMMENTAIRES).length()));
         if(json.has(Database.COLUMN_DATE_POST))
             annonce.setDatePost(json.getLong(Database.COLUMN_DATE_POST));
         if(json.has(Database.COLUMN_DATE_BEGIN))
