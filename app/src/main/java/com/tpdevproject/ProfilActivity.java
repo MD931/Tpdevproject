@@ -1,9 +1,11 @@
 package com.tpdevproject;
 
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +16,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class ProfilActivity extends AppCompatActivity {
     private final static String TAG = "ProfilActivity";
@@ -82,8 +86,8 @@ public class ProfilActivity extends AppCompatActivity {
     }
 
     private void cameraIntent() {
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAMERA_REQUEST);
     }
 
     private void galleryIntent() {
@@ -108,8 +112,7 @@ public class ProfilActivity extends AppCompatActivity {
             imgBtn.setImageURI(uri);
         }
         else if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            imgBtn.setImageBitmap(photo);
+
         }
     }
 
