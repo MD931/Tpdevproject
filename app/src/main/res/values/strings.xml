@@ -52,6 +52,7 @@
     <string name="add_to_favorite">Added to favorite</string>
     <string name="remove_from_favorite">Removed from favorite</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_profil">ProfilActivity</string>
     <string name="title_activity_favorites">My favorites</string>
     <string name="description">Description :</string>
     <string name="comments">Comments :</string>
