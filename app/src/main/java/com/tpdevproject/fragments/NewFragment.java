@@ -123,7 +123,8 @@ public class NewFragment extends Fragment {
                     viewHolder.setPrice(model.getPrice());
                 viewHolder.setScore(model.getScore());
                 viewHolder.setNumberComs(model.getNumberCommentaires());
-                viewHolder.setImage(getContext(), model.getImage());
+                if(model.getImage() != null)
+                    viewHolder.setImage(getContext(), model.getImage());
                 viewHolder.setTimeElapsed(
                         DateTimeUtils.elapsedTimes(model.getDatePost()*-1
                                 ,System.currentTimeMillis()));

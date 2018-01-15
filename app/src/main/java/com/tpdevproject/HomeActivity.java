@@ -143,7 +143,8 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_favoris) {
             startFavorisActivity();
         } else if (id == R.id.nav_maps) {
-            //TODO
+            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             auth.signOut();
             finish();
@@ -167,7 +168,11 @@ public class HomeActivity extends AppCompatActivity
 
         //Sliding
         viewPager = (ViewPager) findViewById(R.id.vp_tab);
-        viewPager.setAdapter(new AdapterTab(getSupportFragmentManager()));
+        String[] titles = {
+                getResources().getString(R.string.tab_new).toString(),
+                getResources().getString(R.string.tab_best).toString()
+        };
+        viewPager.setAdapter(new AdapterTab(getSupportFragmentManager(), titles));
         slidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tab);
         setupTabs();
         slidingTabLayout.setViewPager(viewPager);

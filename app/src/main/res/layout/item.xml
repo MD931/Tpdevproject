@@ -17,6 +17,7 @@
             android:layout_marginBottom="5dp">
             <ImageView
                 android:id="@+id/item_image"
+                android:src="@mipmap/no_image"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginRight="10dp"/>

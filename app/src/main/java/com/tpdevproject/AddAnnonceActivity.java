@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,6 +40,8 @@ import com.tpdevproject.models.Database;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -287,14 +291,27 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
         if(requestCode == GALLERY_REQUEST && resultCode == RESULT_OK){
             Toast.makeText(this, "Yeahhhh !!!!!", Toast.LENGTH_SHORT).show();
-            imgBtn.setImageURI(data.getData());
+            //imgBtn.setImageURI(data.getData());
             uri = data.getData();
+            try {
+                Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                Bitmap rBmp = rotateImage(bmp, 90);
+                imgBtn.setImageBitmap(rBmp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         else if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
             Toast.makeText(this, "Yeahhhh !!!!!", Toast.LENGTH_SHORT).show();
             imgBtn.setImageURI(uri);
-            //uri = data.getData();
+            uri = data.getData();
         }
+    }
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
     String mCurrentPhotoPath;
@@ -317,10 +334,11 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
 
     private void selectImage() {
-        final CharSequence[] items = { "Take Photo", "Choose from Library",
-                "Cancel" };
+        final CharSequence[] items = { getResources().getString(R.string.take_photo).toString(),
+                getResources().getString(R.string.choose_gallery).toString(),
+                getResources().getString(R.string.cancel).toString(), };
         AlertDialog.Builder builder = new AlertDialog.Builder(AddAnnonceActivity.this);
-        builder.setTitle("Add Photo!");
+        builder.setTitle(getResources().getString(R.string.add_photo).toString());
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {

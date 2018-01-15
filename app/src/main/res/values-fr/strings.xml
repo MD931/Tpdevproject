@@ -9,6 +9,12 @@
     <string name="login">Connexion</string>
     <string name="title_activity_favorites">Mes favoris</string>
     <string name="add_to_favorite">Ajouté aux favoris</string>
+    <string name="tab_new">Nouveau</string>
+    <string name="tab_best">Meilleur</string>
+    <string name="add_photo">Ajouter une photo</string>
+    <string name="take_photo">Prendre une photo</string>
+    <string name="choose_gallery">Choisir une de la gallerie</string>
+    <string name="cancel">Annuler</string>
     <string name="remove_from_favorite">Supprimé des favoris</string>
     <string name="description">Description :</string>
     <string name="comments">Commentaires :</string>

@@ -28,8 +28,6 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleMarginEnd="64dp"
-                app:expandedTitleMarginStart="48dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <ImageView
@@ -54,8 +52,11 @@
             android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:behavior_overlapTop="64dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <!--
+            app:behavior_overlapTop="64dp"
+            -->
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,7 +81,13 @@
                     android:layout_marginVertical="10dp" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
-
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            app:layout_anchor="@id/appBarLayout"
+            app:layout_anchorGravity="bottom|right|end" />
 
     </android.support.design.widget.CoordinatorLayout>
 

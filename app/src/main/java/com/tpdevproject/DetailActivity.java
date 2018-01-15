@@ -145,6 +145,18 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+        toolbarImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(annonce.getImage()!=null){
+                    String url = annonce.getImage();
+                    Intent intent = new Intent(getApplicationContext(), ShowImageActivity.class);
+                    intent.putExtra(ShowImageActivity.URL_IMAGE, url);
+                    startActivity(intent);
+                }
+            }
+        });
+
         votePlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

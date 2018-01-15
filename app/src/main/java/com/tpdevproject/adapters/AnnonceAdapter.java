@@ -96,7 +96,8 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
                 DateTimeUtils.elapsedTimes(listAnnonce.get(position).getDatePost() * -1
                         , System.currentTimeMillis()));
         //holder.setUsername();
-        holder.setImage(context, listAnnonce.get(position).getImage());
+        if(listAnnonce.get(position).getImage() != null)
+            holder.setImage(context, listAnnonce.get(position).getImage());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

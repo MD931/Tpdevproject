@@ -32,14 +32,14 @@ import com.tpdevproject.models.Database;
 import com.tpdevproject.adapters.Holder.AnnonceViewHolder;
 
 
-public class CategoryFragment extends Fragment {
-    private final static String TAG = "CategoryFragment";
+public class BestFragment extends Fragment {
+    private final static String TAG = "BestFragment";
 
     private RecyclerView recyclerView;
     private DatabaseReference annonceRef;
     private FirebaseUser user;
 
-    public CategoryFragment() {
+    public BestFragment() {
         super();
     }
 
@@ -121,7 +121,8 @@ public class CategoryFragment extends Fragment {
                     viewHolder.setPrice(model.getPrice());
                 viewHolder.setScore(model.getScore());
                 viewHolder.setNumberComs(model.getNumberCommentaires());
-                viewHolder.setImage(getContext(), model.getImage());
+                if(model.getImage() != null)
+                    viewHolder.setImage(getContext(), model.getImage());
                 viewHolder.setTimeElapsed(
                         DateTimeUtils.elapsedTimes(model.getDatePost()*-1
                                 ,System.currentTimeMillis()));

@@ -49,6 +49,12 @@
     <string name="auth_with_google_failed">Authentication failed.</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="no_result">No result</string>
+    <string name="tab_new">New</string>
+    <string name="tab_best">Best</string>
+    <string name="add_photo">Add a photo</string>
+    <string name="take_photo">Take a photo</string>
+    <string name="choose_gallery">Choose from gallery</string>
+    <string name="cancel">Cancel</string>
     <string name="add_to_favorite">Added to favorite</string>
     <string name="remove_from_favorite">Removed from favorite</string>
     <string name="title_activity_maps">Map</string>
