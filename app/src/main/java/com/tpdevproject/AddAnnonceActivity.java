@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -38,7 +39,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.tpdevproject.models.Database;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -61,6 +64,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
     private StorageReference storageReference;
 
     private Uri uri;
+    private byte[] picture;
 
     private ImageButton imgBtn;
     private EditText title, description, priceDeal, price,
@@ -110,10 +114,11 @@ public class AddAnnonceActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                btnAdd.setEnabled(false);
                 final DatabaseReference tmp = ref.push();
 
                 if(!verifyRequiredField()){
+                    btnAdd.setEnabled(true);
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
@@ -151,11 +156,12 @@ public class AddAnnonceActivity extends AppCompatActivity {
                 });
 
                 tmp.setValue(map);
-                if(uri != null) {
-
+                if(picture != null) {
+                    //if(picture != null) {
                     StorageReference str = storageReference.child(Database.STORAGE_FOLDER_IMG_DEAL)
                             .child(tmp.getKey());
-                    UploadTask ut = str.putFile(uri);
+                    //UploadTask ut = str.putFile(uri);
+                    UploadTask ut = str.putBytes(picture);
                     ut.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -198,9 +204,11 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(AddAnnonceActivity.this, date, myBeginDate
+                DatePickerDialog dpd = new DatePickerDialog(AddAnnonceActivity.this, date, myBeginDate
                         .get(Calendar.YEAR), myBeginDate.get(Calendar.MONTH),
-                        myBeginDate.get(Calendar.DAY_OF_MONTH)).show();
+                        myBeginDate.get(Calendar.DAY_OF_MONTH));
+                dpd.getDatePicker().setMinDate(System.currentTimeMillis());
+                dpd.show();
             }
         });
 
@@ -208,9 +216,11 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(AddAnnonceActivity.this, date2, myBeginDate
+                DatePickerDialog dpd = new DatePickerDialog(AddAnnonceActivity.this, date2, myBeginDate
                         .get(Calendar.YEAR), myBeginDate.get(Calendar.MONTH),
-                        myBeginDate.get(Calendar.DAY_OF_MONTH)).show();
+                        myBeginDate.get(Calendar.DAY_OF_MONTH));
+                dpd.getDatePicker().setMinDate(System.currentTimeMillis());
+                dpd.show();
             }
         });
 
@@ -282,6 +292,13 @@ public class AddAnnonceActivity extends AppCompatActivity {
             priceDeal.setError("Price Deal required");
             return false;
         }
+        if (!TextUtils.isEmpty(link.getText().toString())) {
+            String regex = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+            if(!link.getText().toString().matches(regex)) {
+                link.setError("Provide a good url");
+                return false;
+            }
+        }
         return true;
     }
 
@@ -290,21 +307,40 @@ public class AddAnnonceActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == GALLERY_REQUEST && resultCode == RESULT_OK){
-            Toast.makeText(this, "Yeahhhh !!!!!", Toast.LENGTH_SHORT).show();
-            //imgBtn.setImageURI(data.getData());
             uri = data.getData();
             try {
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                Bitmap rBmp = rotateImage(bmp, 90);
-                imgBtn.setImageBitmap(rBmp);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                picture = baos.toByteArray();
+                imgBtn.setImageBitmap(bitmap);
+                imgBtn.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         else if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
             Toast.makeText(this, "Yeahhhh !!!!!", Toast.LENGTH_SHORT).show();
-            imgBtn.setImageURI(uri);
-            uri = data.getData();
+            int rotation = 0;
+            try {
+                ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
+                rotation = exifToDegrees(exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL));
+                Log.i(TAG, "rotation : "+rotation);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                //imgBtn.setImageURI(data.getData());
+                Bitmap rBmp = rotateImage(bitmap, rotation);
+                //imgBtn.setImageURI(uri);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                rBmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                picture = baos.toByteArray();
+                imgBtn.setImageBitmap(rBmp);
+                imgBtn.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                //uri = data.getData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
     public static Bitmap rotateImage(Bitmap source, float angle) {
@@ -312,6 +348,13 @@ public class AddAnnonceActivity extends AppCompatActivity {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
+    }
+
+    private static int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+        return 0;
     }
 
     String mCurrentPhotoPath;

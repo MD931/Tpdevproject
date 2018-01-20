@@ -58,7 +58,7 @@
             android:name=".AddAnnonceActivity"
             android:label="@string/title_activity_add_annonce"
             android:theme="@style/AppTheme" />
-        <activity android:name=".SetupActivity" />
+        <activity android:name=".CompleteProfilActivity" />
         <activity
             android:name=".DetailActivity"
             android:windowSoftInputMode="adjustResize">

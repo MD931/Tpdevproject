@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:hint="@string/hint_price_deal"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal|numberSigned" />
 
             </android.support.design.widget.TextInputLayout>
 

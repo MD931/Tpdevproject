@@ -6,19 +6,23 @@
    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_login"
-            android:icon="@drawable/ic_action_add"
+            android:icon="@mipmap/ic_login"
             android:title="Login" />
         <item
             android:id="@+id/nav_profil"
+            android:icon="@mipmap/ic_user"
             android:title="Profil" />
         <item
             android:id="@+id/nav_favoris"
+            android:icon="@mipmap/ic_star"
             android:title="Favoris" />
         <item
             android:id="@+id/nav_maps"
+            android:icon="@mipmap/ic_map_activity"
             android:title="Maps" />
         <item
             android:id="@+id/nav_logout"
+            android:icon="@mipmap/ic_logout"
             android:title="Logout" />
 
     </group>

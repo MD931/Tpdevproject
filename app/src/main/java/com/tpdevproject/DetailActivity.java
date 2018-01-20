@@ -2,6 +2,7 @@ package com.tpdevproject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.media.Image;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -50,10 +51,10 @@ public class DetailActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private FirebaseUser user;
-    private ImageView toolbarImage, share, favoris, addComment;
-    private TextView title, description, username, score, votePlus,
-            voteMinus, datePost1, datePost2, dateBegin, dateEnd,
-            comment, no_comment;
+    private ImageView toolbarImage, share, favoris, addComment, link, map;
+    private TextView title, description, price_deal, price, euroPercent
+            ,username, score, votePlus, voteMinus, datePost1, datePost2,
+            dateBegin, dateEnd, comment, no_comment;
     private RecyclerView recyclerView;
     private LinearLayout holderBegin, holderEnd;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -68,7 +69,6 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         idDeal = handleIntent(getIntent());
         initializeVars();
-        //initializeListeners();
     }
 
     @Override
@@ -94,11 +94,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initializeVars() {
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MODE_CHANGED);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarImage = (ImageView) findViewById(R.id.image_toolbar);
         title = (TextView) findViewById(R.id.detail_title);
         description = (TextView) findViewById(R.id.detail_description);
+        price_deal = (TextView) findViewById(R.id.price_deal);
+        price = (TextView) findViewById(R.id.price);
+        euroPercent = (TextView) findViewById(R.id.euro_percent_deal);
         username = (TextView) findViewById(R.id.detail_username);
         score = (TextView) findViewById(R.id.item_score);
         votePlus = (TextView) findViewById(R.id.vote_add);
@@ -111,6 +113,8 @@ public class DetailActivity extends AppCompatActivity {
         dateEnd = (TextView) findViewById(R.id.detail_date_end);
         no_comment = (TextView) findViewById(R.id.detail_no_comment);
         addComment = (ImageView) findViewById(R.id.detail_btn_comment);
+        link = (ImageView) findViewById(R.id.link);
+        map = (ImageView) findViewById(R.id.map);
         comment = (TextView) findViewById(R.id.detail_comment);
         if (idDeal == null) idDeal = getIntent().getExtras().getString(ID_DEAL);
         annonce = null;
@@ -130,6 +134,7 @@ public class DetailActivity extends AppCompatActivity {
         share = (ImageView) findViewById(R.id.share);
         favoris = (ImageView) findViewById(R.id.favoris);
         bindRecyclerView();
+
     }
 
     private void initializeListeners() {
@@ -321,6 +326,40 @@ public class DetailActivity extends AppCompatActivity {
 
         title.setText(annonce.getTitle());
         description.setText(annonce.getDescription());
+        price_deal.setText(annonce.getPriceDeal().toString());
+        if(annonce.getPriceDeal()<0){
+            euroPercent.setText("%");
+        }
+        if(annonce.getPrice() != null){
+            price.setText(annonce.getPrice().toString()+" €");
+            price.setPaintFlags(price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            price.setVisibility(View.VISIBLE);
+        }
+
+        if(annonce.getLink() != null){
+            link.setVisibility(View.VISIBLE);
+            link.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Uri gmmIntentUri = Uri.parse(annonce.getLink());
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    startActivity(mapIntent);
+                }
+            });
+        }
+        if(annonce.getAddress() != null){
+            map.setVisibility(View.VISIBLE);
+            map.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Uri gmmIntentUri = Uri.parse("geo:0,0?q="+annonce.getAddress());
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+                }
+            });
+        }
+
         score.setText(String.valueOf(annonce.getOrder() * -1));
 
         /* IMAGE */
@@ -372,7 +411,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void bindRecyclerView(){
         recyclerView = (RecyclerView) findViewById(R.id.info_comments);
-        //recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         DatabaseReference dbRef = annonceRef.child(idDeal).child("commentaires");
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

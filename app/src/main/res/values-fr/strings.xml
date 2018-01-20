@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="btn_link_to_register">Pas encore membre? Enregistrez vous maintenant avec Firebase!</string>
+    <string name="minimum_password">Mot de passe très court, entrez un minimum de 6 caractères!</string>
+    <string name="auth_with_email_failed">Authentification échouée, veuillez vérifier votre email et
+    votre mot de passe ou inscrivez vous</string>
+    <string name="change_email">Change l\'email</string>
+    <string name="change_password">Changer le mot de passe</string>
+    <string name="send_password_reset_email">Envoyé un email de réinitialisation passe</string>
+    <string name="remove_user">Supprimer un utilisateur</string>
+    <string name="new_pass">Nouveau mot de passe</string>
+    <string name="title_activity_login">Connexion</string>
+    <string name="hint_title">Titre*</string>
+    <string name="hint_password">Mot de passe</string>
+    <string name="hint_address">adresse</string>
+    <string name="hint_date_begin">Date de début</string>
+    <string name="hint_date_end">Date de fin</string>
+    <string name="hint_price_deal">Prix du Deal*</string>
+    <string name="hint_price">Prix</string>
+    <string name="hint_link">Lien</string>
+    <string name="btn_link_to_register">Pas encore membre? Inscrivez vous!</string>
     <string name="btn_link_to_login">Déjà membre. Connectez vous!</string>
     <string name="btn_forgot_password">Vous avez oublié votre mot de passe?</string>
     <string name="btn_reset_password">Réinitialiser votre mot de passe</string>
     <string name="btn_back"><![CDATA[<< Retour]]></string>
     <string name="login_before">Veuillez vous authentifiez avant</string>
     <string name="login">Connexion</string>
+    <string name="hint_add_comment">Ajouter un commentaire...</string>
     <string name="title_activity_favorites">Mes favoris</string>
     <string name="add_to_favorite">Ajouté aux favoris</string>
     <string name="tab_new">Nouveau</string>

@@ -38,7 +38,8 @@
                     app:layout_collapseMode="parallax">
 
                     <ImageButton
-                        android:id="@+id/add_img_profil"
+                        android:id="@+id/profil_img"
+                        android:scaleType="center"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
@@ -66,27 +67,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/activity_vertical_margin"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="50px">
-
-                    <TextView
-                        android:id="@+id/user_name"
+                    <EditText
+                        android:id="@+id/profil_username"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="salim"
                         android:layout_centerInParent="true"/>
-                    <ImageView
-                        android:id="@+id/edite_profil"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_edit_name"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerInParent="true"/>
-                </RelativeLayout>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Update"/>
             </LinearLayout>
 
 

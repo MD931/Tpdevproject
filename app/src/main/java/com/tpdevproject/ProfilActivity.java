@@ -1,5 +1,6 @@
 package com.tpdevproject;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,10 +11,23 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class ProfilActivity extends AppCompatActivity {
     private final static String TAG = "ProfilActivity";
@@ -25,8 +39,14 @@ public class ProfilActivity extends AppCompatActivity {
     private RelativeLayout toolbarImage;
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
+    private EditText username;
     private ImageButton imgBtn;
     private Uri uri;
+
+    private DatabaseReference userRef;
+    private FirebaseUser user;
+
+    private Boolean imageLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +68,33 @@ public class ProfilActivity extends AppCompatActivity {
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_profil);
         collapsingToolbarLayout.setTitleEnabled(false);
 
-        imgBtn = (ImageButton) findViewById(R.id.add_img_profil);
+        imgBtn = (ImageButton) findViewById(R.id.profil_img);
+        username = (EditText) findViewById(R.id.profil_username);
+        userRef = FirebaseDatabase.getInstance().getReference().child("users");
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     private void initializeListeners() {
+        userRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                /*if(dataSnapshot.hasChild("thumbnail")) {
+                    if(!imageLoaded) {
+                        imageLoaded = true;
+                        picassoLoader(getApplicationContext(), imgBtn,
+                                dataSnapshot.child("thumbnail").getValue().toString());
+                        imgBtn.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    }
+                }*/
+                username.setText(dataSnapshot.child("username").getValue().toString());
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, databaseError.toString());;
+            }
+        });
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,12 +148,33 @@ public class ProfilActivity extends AppCompatActivity {
 
         if(requestCode == GALLERY_REQUEST && resultCode == RESULT_OK){
             uri = data.getData();
-            imgBtn.setImageURI(uri);
+            //imgBtn.setImageURI(uri);
+            picassoLoader(getApplicationContext(), imgBtn, uri);
         }
         else if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             imgBtn.setImageBitmap(photo);
         }
+    }
+
+    private void picassoLoader(Context context, ImageView imageView, String url) {
+        Log.i(TAG, "picassoLoader");
+        Picasso.with(context)
+                .load(url)
+                //.resize(30,30)
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .into(imageView);
+    }
+
+    private void picassoLoader(Context context, ImageView imageView, Uri url) {
+        Log.i(TAG, "picassoLoader");
+        Picasso.with(context)
+                .load(url)
+                //.resize(30,30)
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .into(imageView);
     }
 
 }

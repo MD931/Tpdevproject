@@ -102,6 +102,7 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
             @Override
             public void onClick(View view) {
                 Intent mIntent = new Intent(context, DetailActivity.class);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Bundle mBundle = new Bundle();
                 mBundle.putString(DetailActivity.ID_DEAL, listAnnonce.get(position).getId());
                 mIntent.putExtras(mBundle);

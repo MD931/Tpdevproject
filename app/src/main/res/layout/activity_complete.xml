@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
     android:layout_marginVertical="@dimen/activity_vertical_margin"
-    tools:context="com.tpdevproject.SetupActivity">
+    tools:context="com.tpdevproject.CompleteProfilActivity">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"

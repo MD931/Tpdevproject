@@ -44,7 +44,7 @@
                 android:layout_below="@id/item_title"
                 android:layout_toRightOf="@id/item_image"/>
             <TextView
-                android:id="@+id/euro_deal"
+                android:id="@+id/euro_percent_deal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -59,7 +59,7 @@
                 android:layout_marginLeft="5dp"
                 android:text="500 €"
                 android:layout_below="@id/item_title"
-                android:layout_toRightOf="@id/euro_deal"/>
+                android:layout_toRightOf="@id/euro_percent_deal"/>
 
             <TextView
                 android:id="@+id/item_time_elapsed"

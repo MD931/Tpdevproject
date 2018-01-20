@@ -25,6 +25,7 @@ public class SnackBarUtils {
 
     private static void startLoginActivity(Context c) {
         Intent intent = new Intent(c, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         c.startActivity(intent);
     }
 
