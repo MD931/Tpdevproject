@@ -1,15 +1,16 @@
 package com.tpdevproject.parsers;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.tpdevproject.models.Annonce;
-import com.tpdevproject.models.Database;
+import com.tpdevproject.utils.GlobalVars;
+import com.tpdevproject.entities.Deal;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,43 +31,53 @@ public class Parser {
 
     }
 
-    public static Annonce parseAnnonce(String id, JSONObject json) throws JSONException {
-        Annonce annonce = new Annonce();
-        annonce.setId(id);
-        if(json.has(Database.COLUMN_TITLE))
-            annonce.setTitle(json.getString(Database.COLUMN_TITLE));
-        if(json.has(Database.COLUMN_DESCRIPTION))
-            annonce.setDescription(json.getString(Database.COLUMN_DESCRIPTION));
-        if(json.has(Database.COLUMN_PRICE_DEAL))
-            annonce.setPriceDeal(json.getDouble(Database.COLUMN_PRICE_DEAL));
-        if(json.has(Database.COLUMN_ADDRESS))
-            annonce.setAddress(json.getString(Database.COLUMN_ADDRESS));
-        if(json.has(Database.COLUMN_COMMENTAIRES))
-            annonce.setNumberCommentaires(new Long(json.getJSONObject(Database.COLUMN_COMMENTAIRES).length()));
-        if(json.has(Database.COLUMN_DATE_POST))
-            annonce.setDatePost(json.getLong(Database.COLUMN_DATE_POST));
-        if(json.has(Database.COLUMN_DATE_BEGIN))
-            annonce.setDateBegin(json.getString(Database.COLUMN_DATE_BEGIN));
-        if(json.has(Database.COLUMN_DATE_END))
-            annonce.setDateEnd(json.getString(Database.COLUMN_DATE_END));
-        if(json.has(Database.COLUMN_IMAGES))
-            if(json.getJSONObject(Database.COLUMN_IMAGES).has(Database.COLUMN_THUMBNAIL))
-                annonce.setImage(json.getJSONObject(Database.COLUMN_IMAGES)
-                        .getString(Database.COLUMN_THUMBNAIL));
-        if(json.has(Database.COLUMN_ORDER)) {
-            annonce.setOrder(json.getInt(Database.COLUMN_ORDER));
-            annonce.setScore(json.getInt(Database.COLUMN_ORDER)*-1);
+    public static List<Deal> getDeals(JSONObject response) throws JSONException{
+        List<Deal> listDeal = new ArrayList();
+        Iterator<String> keys = response.keys();
+        while(keys.hasNext()){
+            String key = keys.next();
+            listDeal.add(Parser.parseDeal(key, response.getJSONObject(key)));
         }
-        if(json.has(Database.COLUMN_VOTES))
-            annonce.setVotes(parseVotes(json.getJSONObject(Database.COLUMN_VOTES)));
-        if(json.has(Database.COLUMN_PRICE))
-            annonce.setPrice(json.getDouble(Database.COLUMN_PRICE));
-        if(json.has(Database.COLUMN_LINK))
-            annonce.setLink(json.getString(Database.COLUMN_LINK));
-        if(json.has(Database.COLUMN_USER_ID))
-            annonce.setUserId(json.getString(Database.COLUMN_USER_ID));
 
-        return annonce;
+        return listDeal;
+    }
+    public static Deal parseDeal(String id, JSONObject json) throws JSONException {
+        Deal deal = new Deal();
+        deal.setId(id);
+        if(json.has(GlobalVars.COLUMN_TITLE))
+            deal.setTitle(json.getString(GlobalVars.COLUMN_TITLE));
+        if(json.has(GlobalVars.COLUMN_DESCRIPTION))
+            deal.setDescription(json.getString(GlobalVars.COLUMN_DESCRIPTION));
+        if(json.has(GlobalVars.COLUMN_PRICE_DEAL))
+            deal.setPriceDeal(json.getDouble(GlobalVars.COLUMN_PRICE_DEAL));
+        if(json.has(GlobalVars.COLUMN_ADDRESS))
+            deal.setAddress(json.getString(GlobalVars.COLUMN_ADDRESS));
+        if(json.has(GlobalVars.COLUMN_COMMENTAIRES))
+            deal.setNumberCommentaires(new Long(json.getJSONObject(GlobalVars.COLUMN_COMMENTAIRES).length()));
+        if(json.has(GlobalVars.COLUMN_DATE_POST))
+            deal.setDatePost(json.getLong(GlobalVars.COLUMN_DATE_POST));
+        if(json.has(GlobalVars.COLUMN_DATE_BEGIN))
+            deal.setDateBegin(json.getString(GlobalVars.COLUMN_DATE_BEGIN));
+        if(json.has(GlobalVars.COLUMN_DATE_END))
+            deal.setDateEnd(json.getString(GlobalVars.COLUMN_DATE_END));
+        if(json.has(GlobalVars.COLUMN_IMAGES))
+            if(json.getJSONObject(GlobalVars.COLUMN_IMAGES).has(GlobalVars.COLUMN_THUMBNAIL))
+                deal.setImage(json.getJSONObject(GlobalVars.COLUMN_IMAGES)
+                        .getString(GlobalVars.COLUMN_THUMBNAIL));
+        if(json.has(GlobalVars.COLUMN_ORDER)) {
+            deal.setOrder(json.getInt(GlobalVars.COLUMN_ORDER));
+            deal.setScore(json.getInt(GlobalVars.COLUMN_ORDER)*-1);
+        }
+        if(json.has(GlobalVars.COLUMN_VOTES))
+            deal.setVotes(parseVotes(json.getJSONObject(GlobalVars.COLUMN_VOTES)));
+        if(json.has(GlobalVars.COLUMN_PRICE))
+            deal.setPrice(json.getDouble(GlobalVars.COLUMN_PRICE));
+        if(json.has(GlobalVars.COLUMN_LINK))
+            deal.setLink(json.getString(GlobalVars.COLUMN_LINK));
+        if(json.has(GlobalVars.COLUMN_USER_ID))
+            deal.setUserId(json.getString(GlobalVars.COLUMN_USER_ID));
+
+        return deal;
     }
 
     private static Map<String,Integer> parseVotes(JSONObject jsonObject) throws JSONException{

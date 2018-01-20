@@ -11,7 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="14"
         android:fitsSystemWindows="true"
-        tools:context=".ProfilActivity">
+        tools:context=".activities.ProfilActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"

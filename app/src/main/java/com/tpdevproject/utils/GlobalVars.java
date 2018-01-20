@@ -1,14 +1,14 @@
-package com.tpdevproject.models;
+package com.tpdevproject.utils;
 
 /**
  * Created by root on 19/12/17.
  */
 
-public class Database {
+public class GlobalVars {
 
     // Tables
     public static String TABLE_USERS = "users";
-    public static String TABLE_ANNONCES = "annonce";
+    public static String TABLE_DEALS = "deals";
 
     // Columns
     public static String COLUMN_DATE_BEGIN = "date_begin";
@@ -33,7 +33,7 @@ public class Database {
 
     // Storage
     public static String STORAGE_FOLDER_IMG_DEAL = "deal_images";
-    public static String STORAGE_FOLDER_IMG_PROFILE = "profile_images";
+    public static String STORAGE_FOLDER_IMG_PROFILE = "profil_images";
 
     public static String URL = "https://us-central1-tpdevproject.cloudfunctions.net/";
 }

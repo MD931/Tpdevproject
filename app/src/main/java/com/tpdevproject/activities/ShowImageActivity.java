@@ -1,4 +1,4 @@
-package com.tpdevproject;
+package com.tpdevproject.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.tpdevproject.R;
 
 public class ShowImageActivity extends AppCompatActivity {
     private final static String TAG = "ShowImageActivity";

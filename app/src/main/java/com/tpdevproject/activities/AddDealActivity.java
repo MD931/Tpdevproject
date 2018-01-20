@@ -1,4 +1,4 @@
-package com.tpdevproject;
+package com.tpdevproject.activities;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -23,9 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -37,24 +35,24 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.tpdevproject.models.Database;
+import com.tpdevproject.R;
+import com.tpdevproject.utils.GlobalVars;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
-public class AddAnnonceActivity extends AppCompatActivity {
+/*
+    Activité pour l'ajout de deals
+ */
+public class AddDealActivity extends AppCompatActivity {
 
-    private static final String TAG = "AddAnnonceActivity";
+    private static final String TAG = "AddDealActivity";
 
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
@@ -73,22 +71,28 @@ public class AddAnnonceActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
 
+    private String mCurrentPhotoPath;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_annonce);
+        setContentView(R.layout.activity_add_deal);
         initializeVars();
         initializeListeners();
     }
 
+    /*
+        Initialisation des variables
+     */
     private void initializeVars(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         storageReference = FirebaseStorage.getInstance().getReference();
-        ref = FirebaseDatabase.getInstance().getReference().child("annonce");
+        ref = FirebaseDatabase.getInstance().getReference().child(GlobalVars.TABLE_DEALS);
         title = (EditText) findViewById(R.id.add_title);
         description = (EditText) findViewById(R.id.add_description);
         description.setSingleLine(false);
@@ -103,6 +107,9 @@ public class AddAnnonceActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
+    /*
+        Faire un set des listeners
+     */
     private void initializeListeners() {
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +139,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
                             du plus récent au plus ancien
                          */
                         if(dataSnapshot.getKey()
-                                .equals(Database.COLUMN_DATE_POST)) {
+                                .equals(GlobalVars.COLUMN_DATE_POST)) {
                             Long timestamp =(Long) dataSnapshot.getValue();
                             dataSnapshot.getRef().setValue(timestamp*-1);
                         }
@@ -158,7 +165,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
                 tmp.setValue(map);
                 if(picture != null) {
                     //if(picture != null) {
-                    StorageReference str = storageReference.child(Database.STORAGE_FOLDER_IMG_DEAL)
+                    StorageReference str = storageReference.child(GlobalVars.STORAGE_FOLDER_IMG_DEAL)
                             .child(tmp.getKey());
                     //UploadTask ut = str.putFile(uri);
                     UploadTask ut = str.putBytes(picture);
@@ -204,7 +211,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                DatePickerDialog dpd = new DatePickerDialog(AddAnnonceActivity.this, date, myBeginDate
+                DatePickerDialog dpd = new DatePickerDialog(AddDealActivity.this, date, myBeginDate
                         .get(Calendar.YEAR), myBeginDate.get(Calendar.MONTH),
                         myBeginDate.get(Calendar.DAY_OF_MONTH));
                 dpd.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -216,7 +223,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                DatePickerDialog dpd = new DatePickerDialog(AddAnnonceActivity.this, date2, myBeginDate
+                DatePickerDialog dpd = new DatePickerDialog(AddDealActivity.this, date2, myBeginDate
                         .get(Calendar.YEAR), myBeginDate.get(Calendar.MONTH),
                         myBeginDate.get(Calendar.DAY_OF_MONTH));
                 dpd.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -226,76 +233,93 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
     }
 
+    /*
+        Génerer une hashmap avec les columns pour les champs
+     */
     private HashMap<String, Object> generateMapOfField() {
         HashMap<String, Object> value = new HashMap<>();
 
 
-        value.put(Database.COLUMN_USER_ID,
+        value.put(GlobalVars.COLUMN_USER_ID,
                 FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        value.put(Database.COLUMN_DATE_POST,
+        value.put(GlobalVars.COLUMN_DATE_POST,
                 ServerValue.TIMESTAMP);
 
         if(!TextUtils.isEmpty(title.getText().toString()))
-            value.put(Database.COLUMN_TITLE,
+            value.put(GlobalVars.COLUMN_TITLE,
                     title.getText().toString());
 
         if(!TextUtils.isEmpty(description.getText().toString()))
-            value.put(Database.COLUMN_DESCRIPTION,
+            value.put(GlobalVars.COLUMN_DESCRIPTION,
                     description.getText().toString());
 
         if(!TextUtils.isEmpty(priceDeal.getText().toString()))
-            value.put(Database.COLUMN_PRICE_DEAL,
+            value.put(GlobalVars.COLUMN_PRICE_DEAL,
                     Double.parseDouble(priceDeal.getText().toString()));
 
         if(!TextUtils.isEmpty(price.getText().toString()))
-            value.put(Database.COLUMN_PRICE,
+            value.put(GlobalVars.COLUMN_PRICE,
                     Double.parseDouble(price.getText().toString()));
 
         if(!TextUtils.isEmpty(link.getText().toString()))
-            value.put(Database.COLUMN_LINK,
+            value.put(GlobalVars.COLUMN_LINK,
                     link.getText().toString());
 
         if(!TextUtils.isEmpty(address.getText().toString()))
-            value.put(Database.COLUMN_ADDRESS,
+            value.put(GlobalVars.COLUMN_ADDRESS,
                     address.getText().toString());
 
         if(!TextUtils.isEmpty(dateBegin.getText().toString()))
-            value.put(Database.COLUMN_DATE_BEGIN,
+            value.put(GlobalVars.COLUMN_DATE_BEGIN,
                     dateBegin.getText().toString());
 
         if(!TextUtils.isEmpty(dateEnd.getText().toString()))
-            value.put(Database.COLUMN_DATE_END,
+            value.put(GlobalVars.COLUMN_DATE_END,
                     dateEnd.getText().toString());
 
-        value.put(Database.COLUMN_ORDER, 0);
+        value.put(GlobalVars.COLUMN_ORDER, 0);
 
         return value;
     }
 
+    /*
+        Mets en forme la date ex : 20/12/17
+     */
     private void updateLabel(EditText v){
         String myFormat = "dd/MM/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         v.setText(sdf.format(myBeginDate.getTime()));
     }
 
-    public boolean verifyRequiredField(){
+    /*
+        Vérifie que les champs sont valides
+     */
+    private boolean verifyRequiredField(){
         if(TextUtils.isEmpty(title.getText().toString())){
-            title.setError("Title required");
+            title.setError(
+                    getResources().getString(R.string.title_required).toString()
+            );
             return false;
         }
         if(TextUtils.isEmpty(description.getText().toString())){
-            description.setError("Description required");
+            description.setError(
+                    getResources().getString(R.string.description_required).toString()
+            );
             return false;
         }
         if(TextUtils.isEmpty(priceDeal.getText().toString())){
-            priceDeal.setError("Price Deal required");
+            priceDeal.setError(
+                    getResources().getString(R.string.price_deal_required).toString()
+            );
             return false;
         }
         if (!TextUtils.isEmpty(link.getText().toString())) {
             String regex = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
             if(!link.getText().toString().matches(regex)) {
-                link.setError("Provide a good url");
+                link.setError(
+                        getResources().getString(R.string.link_field_error).toString()
+                );
                 return false;
             }
         }
@@ -305,6 +329,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
 
         if(requestCode == GALLERY_REQUEST && resultCode == RESULT_OK){
             uri = data.getData();
@@ -320,7 +345,6 @@ public class AddAnnonceActivity extends AppCompatActivity {
             }
         }
         else if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
-            Toast.makeText(this, "Yeahhhh !!!!!", Toast.LENGTH_SHORT).show();
             int rotation = 0;
             try {
                 ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
@@ -343,6 +367,10 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
         }
     }
+
+    /*
+        Faire une rotation de l'image selon un angle
+     */
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
@@ -350,6 +378,9 @@ public class AddAnnonceActivity extends AppCompatActivity {
                 matrix, true);
     }
 
+    /*
+        Retourne l'angle d'après un ExifOrientation
+     */
     private static int exifToDegrees(int exifOrientation) {
         if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
         else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
@@ -357,8 +388,9 @@ public class AddAnnonceActivity extends AppCompatActivity {
         return 0;
     }
 
-    String mCurrentPhotoPath;
-
+    /*
+        Crée un fichier temporaire ou sauvegarder l'image
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -380,16 +412,14 @@ public class AddAnnonceActivity extends AppCompatActivity {
         final CharSequence[] items = { getResources().getString(R.string.take_photo).toString(),
                 getResources().getString(R.string.choose_gallery).toString(),
                 getResources().getString(R.string.cancel).toString(), };
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddAnnonceActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddDealActivity.this);
         builder.setTitle(getResources().getString(R.string.add_photo).toString());
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (item == 0) {
-                    Toast.makeText(AddAnnonceActivity.this, "Photo", Toast.LENGTH_SHORT).show();
                     cameraIntent();
                 } else if (item == 1) {
-                    Toast.makeText(AddAnnonceActivity.this, "Gallery", Toast.LENGTH_SHORT).show();
                     galleryIntent();
                 } else if (item == 2) {
                     dialog.dismiss();
@@ -399,6 +429,9 @@ public class AddAnnonceActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /*
+        Ouvrir la caméra
+     */
     private void cameraIntent()
     {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -406,7 +439,7 @@ public class AddAnnonceActivity extends AppCompatActivity {
         try {
             photoFile = createImageFile();
         } catch (IOException ex) {
-            // Error occurred while creating the File
+            Log.e(TAG, "cameraIntent : "+ex.getMessage());
         }
         // Continue only if the File was successfully created
         if (photoFile != null) {
@@ -419,12 +452,16 @@ public class AddAnnonceActivity extends AppCompatActivity {
 
     }
 
+    /*
+        Ouvrir la gallerie
+     */
     private void galleryIntent()
     {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST);
+        startActivityForResult(Intent.createChooser(intent,
+                getResources().getString(R.string.select_picture).toString()), GALLERY_REQUEST);
     }
 
     @Override

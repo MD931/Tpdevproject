@@ -1,4 +1,4 @@
-package com.tpdevproject.models;
+package com.tpdevproject.entities;
 
 import com.google.firebase.database.PropertyName;
 

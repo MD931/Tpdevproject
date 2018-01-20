@@ -1,4 +1,4 @@
-package com.tpdevproject.models;
+package com.tpdevproject.entities;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.PropertyName;
@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by root on 09/12/17.
  */
 
-public class Annonce {
+public class Deal {
 
     private String id;
 
@@ -61,11 +61,11 @@ public class Annonce {
     private int score;
     private long numberCommentaires = 0;
 
-    public Annonce() {}
+    public Deal() {}
 
 
-    public Annonce(String id, String title, String description, Double price,
-                   String link, String dateBegin, String dateEnd, Long datePost,
+    public Deal(String id, String title, String description, Double price,
+                String link, String dateBegin, String dateEnd, Long datePost,
                    /*Map<String, Commentaire> commentaires,*/
                    Integer order, String address, Map<String, Integer> votes, Map<String, Integer> favoris) {
         this.id = id;

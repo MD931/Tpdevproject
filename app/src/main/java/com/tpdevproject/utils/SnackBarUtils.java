@@ -1,11 +1,11 @@
-package com.tpdevproject.Utils;
+package com.tpdevproject.utils;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import com.tpdevproject.LoginActivity;
+import com.tpdevproject.activities.LoginActivity;
 import com.tpdevproject.R;
 
 /**

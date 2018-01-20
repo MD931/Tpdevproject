@@ -12,7 +12,6 @@
     <string name="send_password_reset_email">Send Password reset email</string>
     <string name="remove_user">Remove user</string>
     <string name="new_pass">New Password</string>
-    <string name="title_activity_profile">Firebase</string>
     <string name="title_activity_login">Sign in</string>
     <string name="hint_title">Title*</string>
     <string name="hint_description">Description*</string>
@@ -50,6 +49,7 @@
     <string name="no_result">No result</string>
     <string name="tab_new">New</string>
     <string name="tab_best">Best</string>
+    <string name="select_picture">Select picture</string>
     <string name="add_photo">Add a photo</string>
     <string name="take_photo">Take a photo</string>
     <string name="choose_gallery">Choose from gallery</string>
@@ -65,5 +65,22 @@
     <string name="begin_in">Begin : </string>
     <string name="end_in">Expire : </string>
     <string name="no_comments">No comments.</string>
+
+    <string name="registration_failed">Registration failed</string>
+    <string name="registration_success">Registration successful</string>
+    <string name="email_sent">"We have sent you instructions to reset your password!"</string>
+    <string name="email_fail_sent">"Failed to send reset email!"</string>
+    <string name="enter_email">Enter email address!</string>
+    <string name="enter_password">Enter password!</string>
+    <string name="password_too_short">Password too short, enter minimum 6 characters!</string>
+    <string name="share">Share !</string>
+    <string name="deal">Deal</string>
+
+    <string name="title_required">Title required</string>
+    <string name="description_required">Description required</string>
+    <string name="price_deal_required">Price deal required</string>
+    <string name="link_field_error">Provide good url</string>
+    <string name="username_required">Username required</string>
+    <string name="username_field_error">Username length or contains invalid caracters</string>
 
 </resources>

@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.tpdevproject.AddAnnonceActivity"
-    tools:showIn="@layout/activity_add_annonce">
+    tools:context="com.tpdevproject.activities.AddDealActivity"
+    tools:showIn="@layout/activity_add_deal">
 
     <ScrollView
         android:layout_width="match_parent"

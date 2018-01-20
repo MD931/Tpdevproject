@@ -1,4 +1,4 @@
-package com.tpdevproject;
+package com.tpdevproject.activities;
 
 import android.Manifest;
 import android.content.IntentSender;
@@ -25,7 +25,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -47,6 +46,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tpdevproject.R;
+import com.tpdevproject.utils.GlobalVars;
 import com.tpdevproject.parsers.Parser;
 
 import org.json.JSONException;
@@ -57,7 +58,9 @@ import java.util.Iterator;
 import java.util.List;
 
 
-
+/*
+    Activité pour l'affichage d'une map
+ */
 public class MapsActivity extends FragmentActivity
         implements
         OnMyLocationButtonClickListener,
@@ -65,6 +68,8 @@ public class MapsActivity extends FragmentActivity
         OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
+
+    private final String TAG = "MapsActivity";
 
     /**
      * Request code for location permission request.
@@ -118,29 +123,31 @@ public class MapsActivity extends FragmentActivity
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
 
-        DatabaseReference annonceRef = FirebaseDatabase.getInstance().getReference("annonce");
+        DatabaseReference annonceRef = FirebaseDatabase.getInstance().getReference(GlobalVars.TABLE_DEALS);
         annonceRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("MapsActivity", "onDataChange : " + dataSnapshot.toString());
+                Log.i(TAG, "onDataChange : " + dataSnapshot.toString());
                 Iterator<DataSnapshot> data = dataSnapshot.getChildren().iterator();
                 while (data.hasNext()) {
                     DataSnapshot e = data.next();
-                    /*String address = e.child("address").getValue(String.class);
-                    LatLng latLng = getLocationFromAddress(address);
-                    if(latLng != null) {
-                        mMap.addMarker(new MarkerOptions()
-                                .position(latLng)
-                                .title(address));
-                    }*/
-                    showResults(e.child("address").getValue(String.class));
+                    String address = e.child("address").getValue(String.class);
+                    if(address != null){
+                        LatLng latLng = getLocationFromAddress(address);
+                        if(latLng != null) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(latLng)
+                                    .title(address));
+                        }
+                    }
+                    //showResults(e.child(GlobalVars.COLUMN_ADDRESS).getValue(String.class));
                 }
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e(TAG, "onCancelled : "+databaseError.toString());
             }
         });
 
@@ -169,7 +176,7 @@ public class MapsActivity extends FragmentActivity
 
 
     private void centerMapOnMyLocation() {
-        Log.i("MapsActivity", "centerMapOnMyLocation");
+        Log.i(TAG, "centerMapOnMyLocation");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -231,6 +238,9 @@ public class MapsActivity extends FragmentActivity
         }
     }
 
+    /*
+        Affichage des markers
+     */
     private void showResults(final String address) {
         RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, "http://maps.google.com/maps/api/geocode/json?address="+address+"&sensor=false",
@@ -248,6 +258,7 @@ public class MapsActivity extends FragmentActivity
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "onErrorResponse : "+error.getMessage());
 
             }
         });
@@ -255,6 +266,7 @@ public class MapsActivity extends FragmentActivity
     }
 
     public LatLng getLocationFromAddress(String strAddress){
+
         Geocoder coder = new Geocoder(this);
         List<Address> address;
         try {
@@ -271,6 +283,9 @@ public class MapsActivity extends FragmentActivity
         return null;
     }
 
+    /*
+        Si le gps n'est pas activé, afficher une boite de dialogue
+     */
     public void settingsrequest()
     {
         LocationRequest locationRequest = LocationRequest.create();
@@ -315,6 +330,6 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.e(TAG, "onConnectionFailed : "+connectionResult.getErrorMessage());
     }
 }

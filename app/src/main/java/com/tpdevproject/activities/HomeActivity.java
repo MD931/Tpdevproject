@@ -1,4 +1,4 @@
-package com.tpdevproject;
+package com.tpdevproject.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -28,19 +28,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.tpdevproject.Utils.SnackBarUtils;
+import com.tpdevproject.R;
+import com.tpdevproject.utils.GlobalVars;
+import com.tpdevproject.utils.SnackBarUtils;
 import com.tpdevproject.tab.AdapterTab;
 import com.tpdevproject.tab.SlidingTabLayout;
 
-
+/*
+    Activité de la page d'accueil
+ */
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = "HomeActivity";
 
-    private FloatingActionButton fab;
     private SlidingTabLayout slidingTabLayout;
-    private ViewPager viewPager;
     private FirebaseUser user;
     private FirebaseAuth auth;
     private Toolbar toolbar;
@@ -60,6 +62,9 @@ public class HomeActivity extends AppCompatActivity
         checkUser();
     }
 
+    /*
+        Initilisation du drawer
+     */
     private void initialiseDrawer(){
         DrawerLayout drawer  = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -69,22 +74,40 @@ public class HomeActivity extends AppCompatActivity
         NavigationView navigationView;
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
-        TextView loginDrawer = (TextView) headerView.findViewById(R.id.login_drawer);
-        TextView emailDrawer = (TextView) headerView.findViewById(R.id.email_drawer);
+        final TextView loginDrawer = (TextView) headerView.findViewById(R.id.login_drawer);
+        final TextView emailDrawer = (TextView) headerView.findViewById(R.id.email_drawer);
         if(user!=null){
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_favoris).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_profil).setVisible(true);
-            loginDrawer.setText("name");
+
+            /*
+                Récuperer les infos de l'utilisateur et l'afficher
+            */
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(GlobalVars.TABLE_USERS)
+                    .child(user.getUid());
+            userRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.i(TAG, "onDataChange :" + dataSnapshot.child(GlobalVars.COLUMN_USERNAME));
+                    loginDrawer.setText(dataSnapshot.child(GlobalVars.COLUMN_USERNAME).getValue().toString());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.i(TAG, "oncCancelled ValueEventListener");
+                }
+            });
+            //loginDrawer.setText("name");
             emailDrawer.setText(user.getEmail());
         }else{
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_favoris).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_profil).setVisible(false);
-            loginDrawer.setText("Welcome");
-            emailDrawer.setText("");
+            /*loginDrawer.setText("Welcome");
+            emailDrawer.setText("");*/
         }
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -101,6 +124,8 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
+
+    //TODO
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -124,13 +149,14 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Swaps fragments in the main content view
-     */
     private void selectItem(int position) {
         Log.i(TAG, "selectItem : "+position);
     }
 
+
+    /*
+        Naviguer vers les différentes activités à partir du drawer
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -155,6 +181,9 @@ public class HomeActivity extends AppCompatActivity
         return false;
     }
 
+    /*
+        Initialisation des variables
+     */
     private void initializeVars(){
 
         //Firebase
@@ -166,11 +195,12 @@ public class HomeActivity extends AppCompatActivity
 
 
         //Sliding
-        viewPager = (ViewPager) findViewById(R.id.vp_tab);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.vp_tab);
         String[] titles = {
-                getResources().getString(R.string.tab_new).toString(),
-                getResources().getString(R.string.tab_best).toString()
+                getResources().getString(R.string.tab_new),
+                getResources().getString(R.string.tab_best)
         };
+
         viewPager.setAdapter(new AdapterTab(getSupportFragmentManager(), titles));
         slidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tab);
         setupTabs();
@@ -178,7 +208,7 @@ public class HomeActivity extends AppCompatActivity
 
         user = auth.getCurrentUser();
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -197,7 +227,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void startAddAnnonceActivity() {
-        Intent intent = new Intent(getApplicationContext(), AddAnnonceActivity.class);
+        Intent intent = new Intent(getApplicationContext(), AddDealActivity.class);
         startActivity(intent);
     }
 
@@ -218,9 +248,13 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
+    /*
+        Vérifie si un utilisateur possède un username ou pas
+     */
     private void checkUser(){
         if(user != null) {
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
+                    .child(GlobalVars.TABLE_USERS);
             userRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

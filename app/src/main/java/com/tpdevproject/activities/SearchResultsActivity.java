@@ -1,4 +1,4 @@
-package com.tpdevproject;
+package com.tpdevproject.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -25,16 +25,15 @@ import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
-import com.tpdevproject.adapters.AnnonceAdapter;
-import com.tpdevproject.models.Annonce;
-import com.tpdevproject.models.Database;
+import com.tpdevproject.R;
+import com.tpdevproject.utils.GlobalVars;
+import com.tpdevproject.adapters.DealAdapter;
+import com.tpdevproject.entities.Deal;
 import com.tpdevproject.parsers.Parser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class SearchResultsActivity extends AppCompatActivity {
@@ -94,14 +93,14 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     private void showResults(String query) {
         RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Database.URL + "bigben?search=" + query,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, GlobalVars.URL + "bigben?search=" + query,
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i(TAG, "onResponse : "+response.toString());
                 try{
-                    List<Annonce> annonces = getAnnonces(response);
-                    handleResult(annonces);
+                    List<Deal> deals = Parser.getDeals(response);
+                    bindResults(deals);
                 }catch(JSONException e){
                     Log.e(TAG, "onResponse : "+e.getMessage());
                 }
@@ -116,14 +115,15 @@ public class SearchResultsActivity extends AppCompatActivity {
         mQueue.add(jsonObjectRequest);
     }
 
-    private void handleResult(List<Annonce> annonces) {
-        Log.i(TAG, "handleResult : "+annonces);
-        if(annonces.size()>0){
+    private void bindResults(List<Deal> deals) {
+        Log.i(TAG, "bindResults : "+ deals);
+        if(deals.size()>0){
             RecyclerView recyclerView = new RecyclerView(this);
             recyclerView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
                     RecyclerView.LayoutParams.MATCH_PARENT));
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            bindRecyclerView(recyclerView,annonces);
+            bindRecyclerView(recyclerView, deals);
+            hideProgressSearch();
             resultSearch.addView(recyclerView);
         }else{
             TextView tx = new TextView(this);
@@ -133,21 +133,10 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
     }
 
-    private void bindRecyclerView(RecyclerView recyclerView, List<Annonce> annonces) {
-        AnnonceAdapter annonceAdapter = new AnnonceAdapter(annonces, getApplicationContext()
-                , user, FirebaseDatabase.getInstance().getReference(Database.TABLE_ANNONCES));
-        recyclerView.setAdapter(annonceAdapter);
-    }
-
-    private List<Annonce> getAnnonces(JSONObject response) throws JSONException{
-        List<Annonce> listAnnonce = new ArrayList();
-        Iterator<String> keys = response.keys();
-        while(keys.hasNext()){
-            String key = keys.next();
-            listAnnonce.add(Parser.parseAnnonce(key, response.getJSONObject(key)));
-        }
-
-        return listAnnonce;
+    private void bindRecyclerView(RecyclerView recyclerView, List<Deal> deals) {
+        DealAdapter dealAdapter = new DealAdapter(deals, getApplicationContext()
+                , user, FirebaseDatabase.getInstance().getReference(GlobalVars.TABLE_DEALS));
+        recyclerView.setAdapter(dealAdapter);
     }
 
     private void hideProgressSearch(){

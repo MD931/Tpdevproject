@@ -16,14 +16,18 @@ import com.tpdevproject.R;
  */
 
 public class Holder {
-    public static class AnnonceViewHolder extends RecyclerView.ViewHolder {
+
+    /*
+        ViewHolder for Deal
+     */
+    public static class DealViewHolder extends RecyclerView.ViewHolder {
         public View itemView;
         public ImageView view_image;
         public TextView textView_title, textView_score, textView_time_elapsed,
                 textView_number_coms, textView_price_deal, textView_price,
                 textView_username, textView_minus, textView_add;
 
-        public AnnonceViewHolder(View itemView) {
+        public DealViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             textView_title = (TextView)itemView.findViewById(R.id.item_title);
@@ -69,8 +73,6 @@ public class Holder {
         public void setImage(Context context, String url) {
             Picasso.with(context)
                     .load(url)
-                    //.placeholder(R.drawable.ic_launcher_background) //Put image if not exist
-                    //.error(R.drawable.ic_launcher_background) // Put image if error
                     .into(view_image);
         }
 
@@ -87,6 +89,9 @@ public class Holder {
         }
     }
 
+    /*
+        ViewHolder for comments
+     */
     public static class CommentaireViewHolder extends RecyclerView.ViewHolder {
         public View itemView;
         public ImageView view_image;

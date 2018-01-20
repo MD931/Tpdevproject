@@ -1,7 +1,4 @@
-package com.tpdevproject.Utils;
-
-import android.icu.text.DateIntervalFormat;
-import android.icu.util.DateInterval;
+package com.tpdevproject.utils;
 
 /**
  * Created by root on 26/12/17.

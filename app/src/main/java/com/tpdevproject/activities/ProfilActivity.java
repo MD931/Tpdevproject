@@ -1,11 +1,10 @@
-package com.tpdevproject;
+package com.tpdevproject.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,16 +26,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.tpdevproject.R;
 
 public class ProfilActivity extends AppCompatActivity {
     private final static String TAG = "ProfilActivity";
 
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
-
-    private Toolbar toolbar;
-    private RelativeLayout toolbarImage;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
 
     private EditText username;
     private ImageButton imgBtn;
@@ -57,8 +52,8 @@ public class ProfilActivity extends AppCompatActivity {
     }
 
     private void initializeVars() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar_profil);
-        toolbarImage = (RelativeLayout) findViewById(R.id.header_toolbar_profil);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_profil);
+        RelativeLayout toolbarImage = (RelativeLayout) findViewById(R.id.header_toolbar_profil);
 
         toolbar.setTitle("Profil");
         setSupportActionBar(toolbar);
@@ -92,7 +87,7 @@ public class ProfilActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, databaseError.toString());;
+                Log.e(TAG, databaseError.toString());
             }
         });
         imgBtn.setOnClickListener(new View.OnClickListener() {
