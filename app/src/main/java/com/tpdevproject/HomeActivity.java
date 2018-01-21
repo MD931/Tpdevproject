@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tpdevproject.Utils.SnackBarUtils;
 import com.tpdevproject.tab.AdapterTab;
 import com.tpdevproject.tab.SlidingTabLayout;
 
@@ -180,7 +181,7 @@ public class HomeActivity extends AppCompatActivity
                 if(user != null){
                     startAddAnnonceActivity();
                 }else {
-                    showSnackBar(view);
+                    SnackBarUtils.showSnackBarLogin(view, getApplicationContext());
                 }
             }
         });
@@ -194,16 +195,6 @@ public class HomeActivity extends AppCompatActivity
     private void startAddAnnonceActivity() {
         Intent intent = new Intent(getApplicationContext(), AddAnnonceActivity.class);
         startActivity(intent);
-    }
-
-    private void showSnackBar(View view) {
-        Snackbar.make(view, getResources().getString(R.string.login_before), Snackbar.LENGTH_LONG)
-                .setAction(getResources().getString(R.string.login), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startLoginActivity();
-                    }
-                }).show();
     }
 
     private void startLoginActivity() {

@@ -25,9 +25,11 @@ public class Database {
     public static String COLUMN_ORDER = "order";
     public static String COLUMN_USER_ID = "user_id";
     public static String COLUMN_VOTES = "votes";
+    public static String COLUMN_FAVORIS = "favoris";
     public static String COLUMN_USERNAME = "username";
     public static String COLUMN_COMMENTAIRE = "commentaire";
     public static String COLUMN_COMMENTAIRES = "commentaires";
+    public static String COLUMN_IMAGE_PROFILE = "image_profile";
 
     // Storage
     public static String STORAGE_FOLDER_IMG_DEAL = "deal_images";

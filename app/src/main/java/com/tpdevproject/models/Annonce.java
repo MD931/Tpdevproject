@@ -38,8 +38,8 @@ public class Annonce {
     @PropertyName("date_post")
     public Long datePost;
 
-    @PropertyName("commentaires")
-    private Map<String, Commentaire> commentaires = new HashMap<>();
+    /*@PropertyName("commentaires")
+    private Map<String, Commentaire> commentaires = new HashMap<>();*/
 
     @PropertyName("order")
     private Integer order;
@@ -59,13 +59,14 @@ public class Annonce {
     private String username;
     private String image;
     private int score;
+    private long numberCommentaires = 0;
 
     public Annonce() {}
 
 
     public Annonce(String id, String title, String description, Double price,
                    String link, String dateBegin, String dateEnd, Long datePost,
-                   Map<String, Commentaire> commentaires,
+                   /*Map<String, Commentaire> commentaires,*/
                    Integer order, String address, Map<String, Integer> votes, Map<String, Integer> favoris) {
         this.id = id;
         this.title = title;
@@ -75,7 +76,7 @@ public class Annonce {
         this.dateBegin = dateBegin;
         this.dateEnd = dateEnd;
         this.datePost = datePost;
-        this.commentaires = commentaires;
+        //this.commentaires = commentaires;
         this.order = order;
         this.address = address;
         this.votes = votes;
@@ -132,13 +133,13 @@ public class Annonce {
         this.datePost = datePost;
     }
 
-    public Map<String, Commentaire> getCommentaires() {
+    /*public Map<String, Commentaire> getCommentaires() {
         return commentaires;
     }
 
     public void setCommentaires(Map<String, Commentaire> commentaires) {
         this.commentaires = commentaires;
-    }
+    }*/
 
     public Integer getOrder() {
         return order;
@@ -164,8 +165,12 @@ public class Annonce {
         this.favoris = favoris;
     }
 
-    public int getNumberCommentaires(){
-        return this.commentaires.size();
+    public void setNumberCommentaires(long numberCommentaires){
+        this.numberCommentaires = numberCommentaires;
+    }
+
+    public long getNumberCommentaires(){
+        return numberCommentaires;
     }
 
     @Exclude
@@ -230,7 +235,7 @@ public class Annonce {
                 +", dateBegin ="+dateBegin
                 +", dateEnd ="+dateEnd
                 +", datePost ="+datePost
-                +", commentaires ="+commentaires.toString()
+                +", numberCommentaires ="+numberCommentaires
                 +", order = "+order
                 +", address = "+address
                 +", votes = "+votes.toString()

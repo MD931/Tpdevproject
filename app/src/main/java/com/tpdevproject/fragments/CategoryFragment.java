@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import com.tpdevproject.DetailActivity;
 import com.tpdevproject.R;
 import com.tpdevproject.Utils.DateTimeUtils;
+import com.tpdevproject.Utils.SnackBarUtils;
 import com.tpdevproject.models.Annonce;
 import com.tpdevproject.models.Database;
 import com.tpdevproject.adapters.Holder.AnnonceViewHolder;
@@ -69,6 +70,7 @@ public class CategoryFragment extends Fragment {
         ) {
             @Override
             protected Annonce parseSnapshot(DataSnapshot snapshot) {
+                Log.i(TAG, "parseSnapshot");
                 final Annonce annonce = super.parseSnapshot(snapshot);
                 if (annonce != null){
                     annonce.setId(snapshot.getKey());
@@ -77,21 +79,6 @@ public class CategoryFragment extends Fragment {
                     if(snapshot.hasChild(Database.COLUMN_IMAGES))
                         annonce.setImage(snapshot.child(Database.COLUMN_IMAGES)
                                 .child(Database.COLUMN_THUMBNAIL).getValue().toString());
-                    /*annonce.setUserId(snapshot.child(getResources().getString(R.string.column_user_id))
-                            .getValue().toString());
-                    /*
-                    userRef.child(userId)
-                            .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            annonce.setUsername("12");
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {}
-                    });*/
-
-                    //annonce.setUsername(userRef.child(userId).toString());
                     //Votes
                     int votes = 0;
                     for(DataSnapshot e : snapshot.child(Database.COLUMN_VOTES)
@@ -100,8 +87,12 @@ public class CategoryFragment extends Fragment {
                         votes += Integer.parseInt(e.getValue().toString());
                     }
                     annonce.setScore(votes);
+
+                    //Commentaires
+                    if(snapshot.hasChild(Database.COLUMN_COMMENTAIRES)){
+                        annonce.setNumberCommentaires(snapshot.child(Database.COLUMN_COMMENTAIRES).getChildrenCount());
+                    }
                 }
-                Log.i(TAG, "parse : "+annonce.getUsername());
                 return annonce;
             }
 
@@ -172,7 +163,7 @@ public class CategoryFragment extends Fragment {
                                         .setValue(model.getOrder()-1);
                             }
                         }else{
-                            Toast.makeText(getContext(), "Please Login before", Toast.LENGTH_SHORT).show();
+                            SnackBarUtils.showSnackBarLogin(view, getContext());
                         }
                     }
                 });
@@ -189,7 +180,7 @@ public class CategoryFragment extends Fragment {
                                         .setValue(model.getOrder()+1);
                             }
                         }else{
-                            Toast.makeText(getContext(), "Please Login before", Toast.LENGTH_SHORT).show();
+                            SnackBarUtils.showSnackBarLogin(view, getContext());
                         }
                     }
                 });

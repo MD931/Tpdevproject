@@ -74,13 +74,22 @@
                     android:layout_margin="50px">
 
                     <TextView
-                        android:id="@+id/user_name"
+                        android:id="@+id/username"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="salim"
-                        android:layout_centerInParent="true"/>
+                        android:layout_centerInParent="true"
+                        android:textSize="25dp"/>
+                    <EditText
+                        android:id="@+id/username_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="salim"
+                        android:layout_centerInParent="true"
+                        android:textSize="25dp"
+                        android:visibility="invisible"/>
                     <ImageView
-                        android:id="@+id/edite_profil"
+                        android:id="@+id/edit_username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_edit_name"
@@ -94,5 +103,13 @@
 
 
     </android.support.design.widget.CoordinatorLayout>
+
+    <Button
+        android:id="@+id/edit_profil_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:text="@string/edit"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

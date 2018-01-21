@@ -67,6 +67,7 @@ public class AnnonceAdapter extends RecyclerView.Adapter<Holder.AnnonceViewHolde
             }
         });
 
+
         annonceRef.child(listAnnonce.get(position).getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
