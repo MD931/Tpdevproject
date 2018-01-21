@@ -11,6 +11,7 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -43,7 +44,7 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".SearchResultsActivity" />
+                android:value=".activities.SearchResultsActivity" />
         </activity>
         <activity
             android:name=".activities.LoginActivity"
@@ -101,7 +102,11 @@
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".activities.FavorisActivity" />
+        <activity android:name=".activities.FavorisActivity" >
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value=".activities.SearchResultsActivity" />
+        </activity>
         <activity
             android:name=".activities.ProfilActivity"
             android:label="@string/title_activity_profil"

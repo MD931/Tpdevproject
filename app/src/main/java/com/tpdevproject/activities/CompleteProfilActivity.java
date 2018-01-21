@@ -54,7 +54,7 @@ public class CompleteProfilActivity extends AppCompatActivity {
                     username.setError(
                             getResources().getString(R.string.username_required).toString()
                     );
-                }else if(username.getText().toString().matches("^[a-zA-Z0-9._-]{3,}$")){
+                }else if(!username.getText().toString().matches("^[a-zA-Z0-9._-]{3,}$")){
                     username.setError(
                             getResources().getString(R.string.username_field_error).toString()
                     );
