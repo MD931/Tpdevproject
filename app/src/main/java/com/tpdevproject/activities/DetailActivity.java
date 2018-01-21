@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -69,6 +71,7 @@ public class DetailActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         idDeal = handleIntent(getIntent());
         initializeVars();
     }
@@ -134,7 +137,8 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         ViewCompat.setTransitionName(findViewById(R.id.appBarLayout), "Name");
-
+        NestedScrollView nsv = (NestedScrollView) findViewById(R.id.nestedscroll);
+        nsv.fullScroll(View.FOCUS_UP);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
 
@@ -500,7 +504,7 @@ public class DetailActivity extends AppCompatActivity {
      */
     private void bindRecyclerView(){
         recyclerView = (RecyclerView) findViewById(R.id.info_comments);
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(true);
         /*
             Récuperer la liste des commentaires
          */

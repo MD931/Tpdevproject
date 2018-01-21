@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -85,6 +86,12 @@ public class AddDealActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_deal);
         initializeVars();
         initializeListeners();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        checkUser();
     }
 
     /*
@@ -340,7 +347,7 @@ public class AddDealActivity extends AppCompatActivity {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                 picture = baos.toByteArray();
                 imgBtn.setImageBitmap(bitmap);
                 imgBtn.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -518,5 +525,27 @@ public class AddDealActivity extends AppCompatActivity {
         cursor.moveToFirst();
         int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
         return cursor.getString(idx);
+    }
+
+    /*
+        Vérifie si un utilisateur possède un username ou pas
+     */
+    private void checkUser(){
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
+                    .child(GlobalVars.TABLE_USERS);
+            userRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(!dataSnapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                        startActivity(new Intent(getApplicationContext(), CompleteProfilActivity.class));
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e(TAG,databaseError.getDetails());
+                }
+            });
+        }
     }
 }

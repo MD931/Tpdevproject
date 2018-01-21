@@ -25,7 +25,7 @@ public class Holder {
         public ImageView view_image;
         public TextView textView_title, textView_score, textView_time_elapsed,
                 textView_number_coms, textView_price_deal, textView_price,
-                textView_username, textView_minus, textView_add;
+                textView_username, textView_minus, textView_add, textView_euroPercent;
 
         public DealViewHolder(View itemView) {
             super(itemView);
@@ -41,6 +41,7 @@ public class Holder {
             textView_add = (TextView) itemView.findViewById(R.id.vote_add);
             textView_minus = (TextView) itemView.findViewById(R.id.vote_minus);
             textView_time_elapsed = (TextView) itemView.findViewById(R.id.item_time_elapsed);
+            textView_euroPercent = (TextView) itemView.findViewById(R.id.euro_percent_deal);
         }
 
         public void setTitle(String title)
@@ -48,6 +49,10 @@ public class Holder {
             textView_title.setText(title);
         }
         public void setPriceDeal(Double priceDeal){
+            if(priceDeal<0)
+                textView_euroPercent.setText("%");
+            else
+                textView_euroPercent.setText("€");
             textView_price_deal.setText(priceDeal.toString());
         }
 

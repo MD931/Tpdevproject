@@ -1,6 +1,7 @@
 package com.tpdevproject.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -39,6 +40,7 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -47,6 +49,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tpdevproject.R;
+import com.tpdevproject.entities.Deal;
 import com.tpdevproject.utils.GlobalVars;
 import com.tpdevproject.parsers.Parser;
 
@@ -67,7 +70,8 @@ public class MapsActivity extends FragmentActivity
         OnMyLocationClickListener,
         OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
-        ActivityCompat.OnRequestPermissionsResultCallback {
+        ActivityCompat.OnRequestPermissionsResultCallback,
+        GoogleMap.OnInfoWindowClickListener {
 
     private final String TAG = "MapsActivity";
 
@@ -122,6 +126,7 @@ public class MapsActivity extends FragmentActivity
 
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
 
         DatabaseReference annonceRef = FirebaseDatabase.getInstance().getReference(GlobalVars.TABLE_DEALS);
         annonceRef.addValueEventListener(new ValueEventListener() {
@@ -131,13 +136,27 @@ public class MapsActivity extends FragmentActivity
                 Iterator<DataSnapshot> data = dataSnapshot.getChildren().iterator();
                 while (data.hasNext()) {
                     DataSnapshot e = data.next();
-                    String address = e.child("address").getValue(String.class);
-                    if(address != null){
-                        LatLng latLng = getLocationFromAddress(address);
+                    Deal d = e.getValue(Deal.class);
+                    d.setId(e.getKey());
+                    if(e.hasChild(GlobalVars.COLUMN_IMAGES)){
+                        d.setImage(e.child(GlobalVars.COLUMN_IMAGES)
+                                .child(GlobalVars.COLUMN_THUMBNAIL)
+                                .getValue(String.class));
+                    }
+                    //String address = e.child("address").getValue(String.class);
+                    if(d.getAddress() != null){
+                        LatLng latLng = getLocationFromAddress(d.getAddress());
                         if(latLng != null) {
-                            mMap.addMarker(new MarkerOptions()
+                            MarkerOptions mOptions = new MarkerOptions()
                                     .position(latLng)
-                                    .title(address));
+                                    .title(d.getTitle())
+                                    .snippet(d.getAddress());
+                            if(d.getDescription().length()>100) {
+                                mOptions.snippet(d.getDescription().substring(0, 100));
+                            }else{
+                                mOptions.snippet(d.getDescription());
+                            }
+                            mMap.addMarker(mOptions).setTag(d.getId());
                         }
                     }
                     //showResults(e.child(GlobalVars.COLUMN_ADDRESS).getValue(String.class));
@@ -331,5 +350,15 @@ public class MapsActivity extends FragmentActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e(TAG, "onConnectionFailed : "+connectionResult.getErrorMessage());
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Log.i(TAG, "onInfoWindowClick : "+marker.getTag().toString());
+        Intent mIntent = new Intent(this, DetailActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putString(DetailActivity.ID_DEAL, marker.getTag().toString());
+        mIntent.putExtras(mBundle);
+        startActivity(mIntent);
     }
 }

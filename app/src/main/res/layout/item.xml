@@ -49,7 +49,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:textColor="@android:color/holo_red_dark"
-                android:text="€"
                 android:layout_below="@id/item_title"
                 android:layout_toRightOf="@id/price_deal"/>
             <TextView
