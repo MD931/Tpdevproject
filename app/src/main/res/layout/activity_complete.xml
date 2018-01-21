@@ -5,11 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-    android:layout_marginVertical="@dimen/activity_vertical_margin"
     tools:context="com.tpdevproject.activities.CompleteProfilActivity">
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_complete"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            />
+    </android.support.design.widget.AppBarLayout>
+
     <android.support.design.widget.TextInputLayout
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -18,12 +31,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="@string/hint_title"
+            android:hint="@string/hint_username"
             android:inputType="text" />
     </android.support.design.widget.TextInputLayout>
     <Button
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:id="@+id/setup_btn"
-        android:text="Setup"
+        android:text="@string/update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

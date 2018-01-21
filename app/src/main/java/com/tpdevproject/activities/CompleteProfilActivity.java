@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,6 +17,7 @@ import com.tpdevproject.R;
 import com.tpdevproject.utils.GlobalVars;
 
 public class CompleteProfilActivity extends AppCompatActivity {
+
     private FirebaseAuth auth;
     private FirebaseUser user;
     private TextView username;
@@ -41,6 +44,8 @@ public class CompleteProfilActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         validate = (Button) findViewById(R.id.setup_btn);
         username = (TextView) findViewById(R.id.setup_username);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_complete);
+        toolbar.setTitle(R.string.complete);
     }
 
     /*

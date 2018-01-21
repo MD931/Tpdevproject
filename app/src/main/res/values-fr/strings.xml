@@ -14,7 +14,7 @@
     <string name="btn_sign_out">Déconnexion</string>
     <string name="lbl_forgot_password">Mot de passe oublié?</string>
     <string name="forgot_password_msg">Nous avons besoins juste de votre adresse mail pour
-        vous envoyer les inscrtuctions de réinitialisation.</string>
+        vous envoyer les instructions de réinitialisation.</string>
     <string name="title_activity_add_annonce">Ajouter Deal</string>
     <string name="add">Ajouter</string>
     <string name="auth_with_google_failed">Authentification échouée.</string>
@@ -34,7 +34,7 @@
     <string name="hint_address">adresse</string>
     <string name="hint_date_begin">Date de début</string>
     <string name="hint_date_end">Date de fin</string>
-    <string name="hint_price_deal">Prix du Deal*</string>
+    <string name="hint_price_deal">Reduction* (-XX pour un % ou le prix aprés réduction)</string>
     <string name="hint_price">Prix</string>
     <string name="hint_link">Lien</string>
     <string name="btn_link_to_register">Pas encore membre? Inscrivez vous!</string>
@@ -78,4 +78,6 @@
     <string name="link_field_error">Entrez une Url valide</string>
     <string name="username_required">Nom d\'utilisateur requis</string>
     <string name="username_field_error">Longueur du nom d\'utilisateur ou contiens des caractères invalide</string>
+    <string name="update">Mettre à jour</string>
+    <string name="complete">Compéter</string>
 </resources>

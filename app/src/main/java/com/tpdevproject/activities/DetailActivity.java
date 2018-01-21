@@ -346,7 +346,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         //Rajouter le titre et une petite description
-        intent.putExtra(Intent.EXTRA_TEXT, URL + idDeal);
+        intent.putExtra(Intent.EXTRA_TEXT, deal.getTitle()+" \n \n"+URL + idDeal);
         startActivity(Intent.createChooser(intent, getResources().getString(R.string.share)));
     }
 

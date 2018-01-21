@@ -21,7 +21,7 @@
     <string name="hint_address">address</string>
     <string name="hint_date_begin">Date begin</string>
     <string name="hint_date_end">Date end</string>
-    <string name="hint_price_deal">Price Deal*</string>
+    <string name="hint_price_deal">Price Deal* (-XX for % or price after reduction)</string>
     <string name="hint_price">Price</string>
     <string name="hint_link">Link</string>
     <string name="hint_add_comment">Add comment...</string>
@@ -83,5 +83,7 @@
     <string name="link_field_error">Provide good url</string>
     <string name="username_required">Username required</string>
     <string name="username_field_error">Username length or contains invalid caracters</string>
+    <string name="update">Update</string>
+    <string name="complete">Complete</string>
 
 </resources>

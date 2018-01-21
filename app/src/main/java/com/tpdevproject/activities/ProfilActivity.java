@@ -3,14 +3,9 @@ package com.tpdevproject.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
-<<<<<<< HEAD:app/src/main/java/com/tpdevproject/ProfilActivity.java
-import android.os.Environment;
-import android.provider.MediaStore;
-=======
->>>>>>> 3fe635ec6933773dd13b164021656c6c7388af44:app/src/main/java/com/tpdevproject/activities/ProfilActivity.java
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,8 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tpdevproject.R;
 
-import java.io.File;
-
 public class ProfilActivity extends AppCompatActivity {
     private final static String TAG = "ProfilActivity";
 
@@ -45,11 +37,6 @@ public class ProfilActivity extends AppCompatActivity {
     private EditText username;
     private ImageButton imgBtn;
     private Uri uri;
-    String mCurrentPhotoPath;
-
-    private ImageView editeUsername;
-    private TextView username;
-    private EditText usernameEdit;
 
     private DatabaseReference userRef;
     private FirebaseUser user;
@@ -75,7 +62,6 @@ public class ProfilActivity extends AppCompatActivity {
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_profil);
         collapsingToolbarLayout.setTitleEnabled(false);
-
 
         imgBtn = (ImageButton) findViewById(R.id.profil_img);
         username = (EditText) findViewById(R.id.profil_username);
@@ -110,22 +96,6 @@ public class ProfilActivity extends AppCompatActivity {
                 selectImage();
             }
         });
-
-        editeUsername.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(username.getVisibility()==View.VISIBLE){
-                    editeUsername.setImageResource(android.R.drawable.ic_delete);
-                    username.setVisibility(View.INVISIBLE);
-                    usernameEdit.setVisibility(View.VISIBLE);
-                } else{
-                    editeUsername.setImageResource(R.drawable.ic_edit_name);
-                    usernameEdit.setText(username.getText());
-                    username.setVisibility(View.VISIBLE);
-                    usernameEdit.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
     }
     public void selectImage(){
         final CharSequence[] items = { "Take Photo", "Choose from Library",
@@ -149,38 +119,9 @@ public class ProfilActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
     private void cameraIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File photoFile = null;
-        try {
-            photoFile = createImageFile();
-        } catch (IOException ex) {
-            // Error occurred while creating the File
-        }
-        // Continue only if the File was successfully created
-        if (photoFile != null) {
-            uri = FileProvider.getUriForFile(this,
-                    "com.tpdevproject",
-                    photoFile);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            startActivityForResult(intent, CAMERA_REQUEST);
-        }
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 
     private void galleryIntent() {
@@ -206,8 +147,8 @@ public class ProfilActivity extends AppCompatActivity {
             picassoLoader(getApplicationContext(), imgBtn, uri);
         }
         else if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
-            imgBtn.setImageURI(uri);
-            imgBtn.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            imgBtn.setImageBitmap(photo);
         }
     }
 
