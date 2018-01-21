@@ -22,7 +22,7 @@ public class Holder {
      */
     public static class DealViewHolder extends RecyclerView.ViewHolder {
         public View itemView;
-        public ImageView view_image;
+        public ImageView view_image, view_imageUser;
         public TextView textView_title, textView_score, textView_time_elapsed,
                 textView_number_coms, textView_price_deal, textView_price,
                 textView_username, textView_minus, textView_add, textView_euroPercent;
@@ -38,6 +38,7 @@ public class Holder {
             textView_number_coms = (TextView)itemView.findViewById(R.id.item_number_coms);
             textView_username = (TextView)itemView.findViewById(R.id.item_username);
             view_image = (ImageView) itemView.findViewById(R.id.item_image);
+            view_imageUser = (ImageView) itemView.findViewById(R.id.item_image_user);
             textView_add = (TextView) itemView.findViewById(R.id.vote_add);
             textView_minus = (TextView) itemView.findViewById(R.id.vote_minus);
             textView_time_elapsed = (TextView) itemView.findViewById(R.id.item_time_elapsed);
@@ -79,6 +80,12 @@ public class Holder {
             Picasso.with(context)
                     .load(url)
                     .into(view_image);
+        }
+
+        public void setImageUser(Context context, String url) {
+            Picasso.with(context)
+                    .load(url)
+                    .into(view_imageUser);
         }
 
         public void setVotedPlus(){

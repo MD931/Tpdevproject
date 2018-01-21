@@ -55,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
     private String URL = "http://bigdeal.com/deal/";
     private Toolbar toolbar;
     private FirebaseUser user;
-    private ImageView toolbarImage, share, favoris, addComment, link, map;
+    private ImageView toolbarImage, imageUser,share, favoris, addComment, link, map;
     private TextView title, description, price_deal, price, euroPercent
             ,username, score, votePlus, voteMinus, datePost1, datePost2,
             dateBegin, dateEnd, comment, no_comment;
@@ -107,6 +107,7 @@ public class DetailActivity extends AppCompatActivity {
     private void initializeVars() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarImage = (ImageView) findViewById(R.id.image_toolbar);
+        imageUser = (ImageView) findViewById(R.id.item_image_user);
         title = (TextView) findViewById(R.id.detail_title);
         description = (TextView) findViewById(R.id.detail_description);
         price_deal = (TextView) findViewById(R.id.price_deal);
@@ -129,9 +130,6 @@ public class DetailActivity extends AppCompatActivity {
         comment = (TextView) findViewById(R.id.detail_comment);
         if (idDeal == null) idDeal = getIntent().getExtras().getString(ID_DEAL);
         deal = null;
-        toolbar.setTitle(
-                getResources().getString(R.string.deal)
-        );
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -374,6 +372,9 @@ public class DetailActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i(TAG, "onDataChange :" + dataSnapshot.child(GlobalVars.COLUMN_USERNAME));
                 username.setText(dataSnapshot.child(GlobalVars.COLUMN_USERNAME).getValue().toString());
+                if(dataSnapshot.hasChild(GlobalVars.COLUMN_THUMBNAIL)){
+                    picassoLoader(getApplicationContext(), imageUser, dataSnapshot.child(GlobalVars.COLUMN_THUMBNAIL).getValue(String.class));
+                }
             }
 
             @Override
@@ -535,18 +536,6 @@ public class DetailActivity extends AppCompatActivity {
                 Holder.CommentaireViewHolder.class,
                 dbRef
         ) {
-            //TODO
-            /* A enlever */
-            @Override
-            protected Commentaire parseSnapshot(DataSnapshot snapshot) {
-                Log.i(TAG, "parseSnapshot");
-                final Commentaire commentaire = super.parseSnapshot(snapshot);
-                if (commentaire != null){
-                    Log.i(TAG, "parseSnapshot : "+commentaire.toString());
-                    //commentaire.setId(snapshot.getKey());
-                }
-                return commentaire;
-            }
 
             @Override
             protected void populateViewHolder(final Holder.CommentaireViewHolder viewHolder, final Commentaire model, int position) {
@@ -560,9 +549,9 @@ public class DetailActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.i(TAG, "onDataChange :"+dataSnapshot.child(GlobalVars.COLUMN_USERNAME));
                         viewHolder.setUsername(dataSnapshot.child(GlobalVars.COLUMN_USERNAME).getValue().toString());
-                        if(dataSnapshot.hasChild(GlobalVars.COLUMN_IMAGE_PROFILE))
+                        if(dataSnapshot.hasChild(GlobalVars.COLUMN_THUMBNAIL))
                             viewHolder.setImage(getApplicationContext(),
-                                    dataSnapshot.child(GlobalVars.COLUMN_IMAGE_PROFILE).getValue().toString());
+                                    dataSnapshot.child(GlobalVars.COLUMN_THUMBNAIL).getValue().toString());
                     }
 
                     @Override

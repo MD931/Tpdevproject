@@ -18,9 +18,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +34,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.tpdevproject.R;
 import com.tpdevproject.utils.GlobalVars;
 import com.tpdevproject.utils.SnackBarUtils;
@@ -46,6 +53,7 @@ public class HomeActivity extends AppCompatActivity
     private FirebaseUser user;
     private FirebaseAuth auth;
     private Toolbar toolbar;
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +84,15 @@ public class HomeActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         final TextView loginDrawer = (TextView) headerView.findViewById(R.id.login_drawer);
         final TextView emailDrawer = (TextView) headerView.findViewById(R.id.email_drawer);
+        final ImageView imgUser = (ImageView) headerView.findViewById(R.id.image_drawer);
         if(user!=null){
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
+            // [END config_signin]
+
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_favoris).setVisible(true);
@@ -93,6 +109,9 @@ public class HomeActivity extends AppCompatActivity
                     Log.i(TAG, "onDataChange :" + dataSnapshot.child(GlobalVars.COLUMN_USERNAME));
                     if(dataSnapshot.hasChild(GlobalVars.COLUMN_USERNAME))
                         loginDrawer.setText(dataSnapshot.child(GlobalVars.COLUMN_USERNAME).getValue().toString());
+                    if(dataSnapshot.hasChild(GlobalVars.COLUMN_THUMBNAIL)){
+                        picassoLoader(getApplicationContext(), imgUser,dataSnapshot.child(GlobalVars.COLUMN_THUMBNAIL).getValue(String.class));
+                    }
                 }
 
                 @Override
@@ -123,19 +142,6 @@ public class HomeActivity extends AppCompatActivity
                 searchManager.getSearchableInfo(getComponentName()));
 
         return true;
-    }
-
-
-    //TODO
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -173,6 +179,8 @@ public class HomeActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             auth.signOut();
+            // Google sign out
+            mGoogleSignInClient.signOut();
             finish();
             startActivity(getIntent());
         }
@@ -269,5 +277,12 @@ public class HomeActivity extends AppCompatActivity
                 }
             });
         }
+    }
+
+    private void picassoLoader(Context context, ImageView imageView, String url) {
+        Log.i(TAG, "picassoLoader");
+        Picasso.with(context)
+                .load(url)
+                .into(imageView);
     }
 }

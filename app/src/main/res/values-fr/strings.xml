@@ -46,6 +46,8 @@
     <string name="login">Connexion</string>
     <string name="hint_add_comment">Ajouter un commentaire...</string>
     <string name="title_activity_favorites">Mes favoris</string>
+    <string name="title_activity_profil">Profile</string>
+    <string name="title_activity_complete">Completer votre profile</string>
     <string name="add_to_favorite">Ajouté aux favoris</string>
     <string name="tab_new">Nouveau</string>
     <string name="tab_best">Meilleur</string>
@@ -72,6 +74,10 @@
     <string name="share">Partager !</string>
     <string name="deal">Deal</string>
 
+    <string name="profil">Profile</string>
+    <string name="my_favorites">Mes favoris</string>
+    <string name="logout">Déconnexion</string>
+
     <string name="title_required">Titre requis</string>
     <string name="description_required">Déscription requise</string>
     <string name="price_deal_required">Prix du deal requis</string>
@@ -79,5 +85,4 @@
     <string name="username_required">Nom d\'utilisateur requis</string>
     <string name="username_field_error">Longueur du nom d\'utilisateur ou contiens des caractères invalide</string>
     <string name="update">Mettre à jour</string>
-    <string name="complete">Compéter</string>
 </resources>

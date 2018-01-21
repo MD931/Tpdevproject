@@ -13,10 +13,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -121,8 +123,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signInWithGoogle() {
+
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        /*startActivityForResult(AccountPicker.newChooseAccountIntent(null,
+                null, new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, true, null, null, null, null),
+                RC_SIGN_IN);*/
     }
 
     private void signInWithEmailAndPassword(String email,final String password) {
@@ -157,7 +163,9 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
-                // ...
+                Toast.makeText(LoginActivity.this,
+                        getResources().getString(R.string.auth_with_google_failed)+" "+e.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
         }
     }

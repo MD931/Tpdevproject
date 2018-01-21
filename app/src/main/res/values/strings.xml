@@ -45,7 +45,7 @@
     <string name="login_before">Please login in before</string>
     <string name="login">Login</string>
     <string name="auth_with_google_failed">Authentication failed.</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Home</string>
     <string name="no_result">No result</string>
     <string name="tab_new">New</string>
     <string name="tab_best">Best</string>
@@ -57,8 +57,10 @@
     <string name="add_to_favorite">Added to favorite</string>
     <string name="remove_from_favorite">Removed from favorite</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_profil">ProfilActivity</string>
+    <string name="title_activity_profil">Profil</string>
     <string name="title_activity_favorites">My favorites</string>
+    <string name="title_activity_detail">Deal</string>
+    <string name="title_activity_complete">Complete your profil</string>
     <string name="description">Description :</string>
     <string name="comments">Comments :</string>
     <string name="posted_in">Posted : </string>
@@ -77,6 +79,11 @@
     <string name="share">Share !</string>
     <string name="deal">Deal</string>
 
+    <string name="profil">Profil</string>
+    <string name="my_favorites">My favorites</string>
+    <string name="maps">Maps</string>
+    <string name="logout">Logout</string>
+
     <string name="title_required">Title required</string>
     <string name="description_required">Description required</string>
     <string name="price_deal_required">Price deal required</string>
@@ -84,6 +91,5 @@
     <string name="username_required">Username required</string>
     <string name="username_field_error">Username length or contains invalid caracters</string>
     <string name="update">Update</string>
-    <string name="complete">Complete</string>
 
 </resources>

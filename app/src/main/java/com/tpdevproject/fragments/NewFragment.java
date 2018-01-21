@@ -115,6 +115,9 @@ public class NewFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.i(TAG, "onDataChange :"+dataSnapshot.child(GlobalVars.COLUMN_USERNAME));
                         viewHolder.setUsername(dataSnapshot.child(GlobalVars.COLUMN_USERNAME).getValue().toString());
+                        if(dataSnapshot.hasChild(GlobalVars.COLUMN_THUMBNAIL)){
+                            viewHolder.setImageUser(getContext(), dataSnapshot.child(GlobalVars.COLUMN_THUMBNAIL).getValue(String.class));
+                        }
                     }
 
                     @Override

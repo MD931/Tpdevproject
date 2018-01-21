@@ -33,13 +33,13 @@ public class DealAdapter extends RecyclerView.Adapter<Holder.DealViewHolder> {
     private List<Deal> listDeal;
     private Context context;
     private FirebaseUser user;
-    private DatabaseReference annonceRef;
+    private DatabaseReference dealRef;
 
-    public DealAdapter(List<Deal> listDeal, Context context, FirebaseUser user, DatabaseReference annonceRef) {
+    public DealAdapter(List<Deal> listDeal, Context context, FirebaseUser user, DatabaseReference dealRef) {
         this.listDeal = listDeal;
         this.context = context;
         this.user = user;
-        this.annonceRef = annonceRef;
+        this.dealRef = dealRef;
     }
 
     @Override
@@ -60,6 +60,9 @@ public class DealAdapter extends RecyclerView.Adapter<Holder.DealViewHolder> {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 holder.setUsername(dataSnapshot.child("username").getValue().toString());
+                if(dataSnapshot.hasChild(GlobalVars.COLUMN_THUMBNAIL)){
+                    holder.setImageUser(context, dataSnapshot.child(GlobalVars.COLUMN_THUMBNAIL).getValue(String.class));
+                }
             }
 
             @Override
@@ -69,7 +72,7 @@ public class DealAdapter extends RecyclerView.Adapter<Holder.DealViewHolder> {
         });
 
 
-        annonceRef.child(listDeal.get(position).getId()).addValueEventListener(new ValueEventListener() {
+        dealRef.child(listDeal.get(position).getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Deal deal = dataSnapshot.getValue(Deal.class);
@@ -116,21 +119,16 @@ public class DealAdapter extends RecyclerView.Adapter<Holder.DealViewHolder> {
                 } else {
                     holder.setVotedMinus();
             }
-        holder.textView_score.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "Clique sur score", Toast.LENGTH_SHORT).show();
-            }
-        });
+
         holder.textView_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (user != null) {
                     Log.i("votes", "add");
                     if (!listDeal.get(position).getVotes().containsKey(user.getUid())) {
-                        annonceRef.child(listDeal.get(position).getId()).child("votes")
+                        dealRef.child(listDeal.get(position).getId()).child("votes")
                                 .child(user.getUid()).setValue(1);
-                        annonceRef.child(listDeal.get(position).getId()).child("order")
+                        dealRef.child(listDeal.get(position).getId()).child("order")
                                 .setValue(listDeal.get(position).getOrder() - 1);
                         //notifyDataSetChanged();
                     }
@@ -146,9 +144,9 @@ public class DealAdapter extends RecyclerView.Adapter<Holder.DealViewHolder> {
                 if (user != null) {
                     Log.i("votes", "minus");
                     if (!listDeal.get(position).getVotes().containsKey(user.getUid())) {
-                        annonceRef.child(listDeal.get(position).getId()).child("votes")
+                        dealRef.child(listDeal.get(position).getId()).child("votes")
                                 .child(user.getUid()).setValue(-1);
-                        annonceRef.child(listDeal.get(position).getId()).child("order")
+                        dealRef.child(listDeal.get(position).getId()).child("order")
                                 .setValue(listDeal.get(position).getOrder() + 1);
                         //notifyDataSetChanged();
                     }

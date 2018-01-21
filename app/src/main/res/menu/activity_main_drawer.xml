@@ -7,23 +7,23 @@
         <item
             android:id="@+id/nav_login"
             android:icon="@mipmap/ic_login"
-            android:title="Login" />
+            android:title="@string/login" />
         <item
             android:id="@+id/nav_profil"
             android:icon="@mipmap/ic_user"
-            android:title="Profil" />
+            android:title="@string/profil" />
         <item
             android:id="@+id/nav_favoris"
             android:icon="@mipmap/ic_star"
-            android:title="Favoris" />
+            android:title="@string/my_favorites" />
         <item
             android:id="@+id/nav_maps"
             android:icon="@mipmap/ic_map_activity"
-            android:title="Maps" />
+            android:title="@string/maps" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@mipmap/ic_logout"
-            android:title="Logout" />
+            android:title="@string/logout" />
 
     </group>
 

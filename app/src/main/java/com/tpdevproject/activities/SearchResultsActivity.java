@@ -93,7 +93,7 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     private void showResults(String query) {
         RequestQueue mQueue = Volley.newRequestQueue(getApplicationContext());
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, GlobalVars.URL + "bigben?search=" + query,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, GlobalVars.URL + "search?search=" + query,
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

@@ -59,9 +59,11 @@
             android:name=".activities.AddDealActivity"
             android:label="@string/title_activity_add_annonce"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.CompleteProfilActivity" />
+        <activity android:name=".activities.CompleteProfilActivity"
+            android:label="@string/title_activity_detail"/>
         <activity
             android:name=".activities.DetailActivity"
+            android:label="@string/title_activity_detail"
             android:windowSoftInputMode="adjustResize">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -102,7 +104,8 @@
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".activities.FavorisActivity" >
+        <activity android:name=".activities.FavorisActivity"
+            android:label="@string/title_activity_favorites">
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".activities.SearchResultsActivity" />

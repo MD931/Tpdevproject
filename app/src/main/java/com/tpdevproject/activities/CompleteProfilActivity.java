@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
@@ -45,7 +44,6 @@ public class CompleteProfilActivity extends AppCompatActivity {
         validate = (Button) findViewById(R.id.setup_btn);
         username = (TextView) findViewById(R.id.setup_username);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_complete);
-        toolbar.setTitle(R.string.complete);
     }
 
     /*
