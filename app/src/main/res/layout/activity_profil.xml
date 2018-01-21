@@ -44,6 +44,7 @@
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
                         android:src="@drawable/ic_add_a_photo"
+                        app:layout_collapseMode="parallax"
                         android:background="?attr/colorPrimary"/>
                 </RelativeLayout>
 

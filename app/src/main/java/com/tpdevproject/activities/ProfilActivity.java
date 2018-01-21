@@ -12,12 +12,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,8 +27,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.tpdevproject.R;
+import com.tpdevproject.utils.GlobalVars;
+
+import java.util.HashMap;
 
 public class ProfilActivity extends AppCompatActivity {
     private final static String TAG = "ProfilActivity";
@@ -42,6 +50,8 @@ public class ProfilActivity extends AppCompatActivity {
     private FirebaseUser user;
 
     private Boolean imageLoaded = false;
+    private Button editBtn;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +75,10 @@ public class ProfilActivity extends AppCompatActivity {
 
         imgBtn = (ImageButton) findViewById(R.id.profil_img);
         username = (EditText) findViewById(R.id.profil_username);
+        editBtn = (Button) findViewById(R.id.edit_profil_button);
         userRef = FirebaseDatabase.getInstance().getReference().child("users");
+
+        storageReference = FirebaseStorage.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
@@ -73,14 +86,14 @@ public class ProfilActivity extends AppCompatActivity {
         userRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                /*if(dataSnapshot.hasChild("thumbnail")) {
+                if(dataSnapshot.hasChild("thumbnail")) {
                     if(!imageLoaded) {
                         imageLoaded = true;
                         picassoLoader(getApplicationContext(), imgBtn,
                                 dataSnapshot.child("thumbnail").getValue().toString());
                         imgBtn.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     }
-                }*/
+                }
                 username.setText(dataSnapshot.child("username").getValue().toString());
 
             }
@@ -94,6 +107,29 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 selectImage();
+            }
+        });
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                map.put(GlobalVars.COLUMN_USERNAME, username.getText().toString());
+                userRef.updateChildren(map);
+                if(picture != null) {
+                    //if(picture != null) {
+                    StorageReference str = storageReference.child(GlobalVars.STORAGE_FOLDER_IMG_DEAL)
+                            .child(tmp.getKey());
+                    //UploadTask ut = str.putFile(uri);
+                    UploadTask ut = str.putBytes(picture);
+                    ut.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressBar.setVisibility(View.GONE);
+                            finish();
+                        }
+                    });
+                }
             }
         });
     }
