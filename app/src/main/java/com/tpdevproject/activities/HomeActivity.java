@@ -91,7 +91,8 @@ public class HomeActivity extends AppCompatActivity
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.i(TAG, "onDataChange :" + dataSnapshot.child(GlobalVars.COLUMN_USERNAME));
-                    loginDrawer.setText(dataSnapshot.child(GlobalVars.COLUMN_USERNAME).getValue().toString());
+                    if(dataSnapshot.hasChild(GlobalVars.COLUMN_USERNAME))
+                        loginDrawer.setText(dataSnapshot.child(GlobalVars.COLUMN_USERNAME).getValue().toString());
                 }
 
                 @Override

@@ -16,7 +16,6 @@
         android:layout_toRightOf="@id/comment_image_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="amazigh_argas"
         android:textColor="@android:color/black"
         />
     <TextView
@@ -24,8 +23,7 @@
         android:layout_toRightOf="@id/comment_image_user"
         android:layout_below="@+id/comment_username"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="28 Novembre 2017" />
+        android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/comment_text"
         android:layout_toRightOf="@id/comment_image_user"
@@ -33,8 +31,7 @@
         android:layout_below="@+id/comment_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:text="Ceci est mon premier commentaire" />
+        android:textColor="@android:color/black"/>
     <include
         android:layout_marginTop="10dp"
         layout="@layout/separation_line"

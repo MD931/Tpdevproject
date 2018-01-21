@@ -1,8 +1,10 @@
 package com.tpdevproject.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
@@ -23,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +59,7 @@ public class AddDealActivity extends AppCompatActivity {
 
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
+    private static final int CAMERA_REQUEST2 = 3;
 
     private final Calendar myBeginDate = Calendar.getInstance();
     private DatabaseReference ref;
@@ -347,24 +351,44 @@ public class AddDealActivity extends AppCompatActivity {
         else if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
             int rotation = 0;
             try {
-                ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
-                rotation = exifToDegrees(exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL));
-                Log.i(TAG, "rotation : "+rotation);
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                //imgBtn.setImageURI(data.getData());
-                Bitmap rBmp = rotateImage(bitmap, rotation);
-                //imgBtn.setImageURI(uri);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                rBmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                picture = baos.toByteArray();
-                imgBtn.setImageBitmap(rBmp);
-                imgBtn.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                try {
+                    ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
+                    //ExifInterface exif = new ExifInterface(uri.getPath());
+                    rotation = exifToDegrees(exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL));
+                    Log.i(TAG, "rotation : " + rotation);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                    //imgBtn.setImageURI(data.getData());
+                    Bitmap rBmp = rotateImage(bitmap, rotation);
+                    //imgBtn.setImageURI(uri);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    rBmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    picture = baos.toByteArray();
+                    imgBtn.setImageBitmap(rBmp);
+                    imgBtn.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                }catch(RuntimeException e){
+                    Bundle extras = data.getExtras();
+                    Bitmap rBmp = (Bitmap) extras.get("data");
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    rBmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    picture = baos.toByteArray();
+                    imgBtn.setImageBitmap(rBmp);
+                }
+
                 //uri = data.getData();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if (requestCode == CAMERA_REQUEST2 && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
 
+            imgBtn.setImageBitmap(imageBitmap);
 
+            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+            //Uri tempUri = getImageUri(getApplicationContext(), imageBitmap);
+
+            // CALL THIS METHOD TO GET THE ACTUAL PATH
+            //Toast.makeText(AddDealActivity.this,"Here "+ getRealPathFromURI(tempUri),                 Toast.LENGTH_LONG).show();
         }
     }
 
@@ -419,6 +443,7 @@ public class AddDealActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int item) {
                 if (item == 0) {
                     cameraIntent();
+                    //dispatchTakePictureIntent();
                 } else if (item == 1) {
                     galleryIntent();
                 } else if (item == 2) {
@@ -443,11 +468,15 @@ public class AddDealActivity extends AppCompatActivity {
         }
         // Continue only if the File was successfully created
         if (photoFile != null) {
+            Log.i(TAG, "photoFile not null");
             uri = FileProvider.getUriForFile(this,
                     "com.tpdevproject",
                     photoFile);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            startActivityForResult(intent, CAMERA_REQUEST);
+            if(android.os.Build.VERSION.SDK_INT > 22) {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            }
+            if(intent.resolveActivity(getPackageManager()) != null)
+                startActivityForResult(intent, CAMERA_REQUEST);
         }
 
     }
@@ -468,5 +497,26 @@ public class AddDealActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, CAMERA_REQUEST2);
+        }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 }
