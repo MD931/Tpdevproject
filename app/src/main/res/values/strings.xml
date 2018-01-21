@@ -3,7 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>
     <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
@@ -13,7 +12,6 @@
     <string name="send_password_reset_email">Send Password reset email</string>
     <string name="remove_user">Remove user</string>
     <string name="new_pass">New Password</string>
-    <string name="title_activity_profile">Firebase</string>
     <string name="title_activity_login">Sign in</string>
     <string name="hint_title">Title*</string>
     <string name="hint_description">Description*</string>
@@ -29,7 +27,7 @@
     <string name="hint_add_comment">Add comment...</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_google_login">Login with Google</string>
-    <string name="btn_link_to_register">Not a member? Get registered in Firebase now!</string>
+    <string name="btn_link_to_register">Not a member? Get registered!</string>
     <string name="btn_link_to_login">Already registered. Login Me!</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="btn_forgot_password">Forgot your password?</string>
@@ -49,6 +47,13 @@
     <string name="auth_with_google_failed">Authentication failed.</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="no_result">No result</string>
+    <string name="tab_new">New</string>
+    <string name="tab_best">Best</string>
+    <string name="select_picture">Select picture</string>
+    <string name="add_photo">Add a photo</string>
+    <string name="take_photo">Take a photo</string>
+    <string name="choose_gallery">Choose from gallery</string>
+    <string name="cancel">Cancel</string>
     <string name="add_to_favorite">Added to favorite</string>
     <string name="remove_from_favorite">Removed from favorite</string>
     <string name="title_activity_maps">Map</string>
@@ -61,5 +66,22 @@
     <string name="end_in">Expire : </string>
     <string name="no_comments">No comments.</string>
     <string name="edit">Edit</string>
+
+    <string name="registration_failed">Registration failed</string>
+    <string name="registration_success">Registration successful</string>
+    <string name="email_sent">"We have sent you instructions to reset your password!"</string>
+    <string name="email_fail_sent">"Failed to send reset email!"</string>
+    <string name="enter_email">Enter email address!</string>
+    <string name="enter_password">Enter password!</string>
+    <string name="password_too_short">Password too short, enter minimum 6 characters!</string>
+    <string name="share">Share !</string>
+    <string name="deal">Deal</string>
+
+    <string name="title_required">Title required</string>
+    <string name="description_required">Description required</string>
+    <string name="price_deal_required">Price deal required</string>
+    <string name="link_field_error">Provide good url</string>
+    <string name="username_required">Username required</string>
+    <string name="username_field_error">Username length or contains invalid caracters</string>
 
 </resources>

@@ -1,12 +1,11 @@
 package com.tpdevproject.tab;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import com.tpdevproject.fragments.CategoryFragment;
-import com.tpdevproject.fragments.HomeFragment;
+
+import com.tpdevproject.fragments.BestFragment;
 import com.tpdevproject.fragments.NewFragment;
 
 /**
@@ -14,21 +13,19 @@ import com.tpdevproject.fragments.NewFragment;
  */
 
 public class AdapterTab extends FragmentPagerAdapter{
-    private String[] titles = {"Home", "New", "Categorie"};
-    public AdapterTab(FragmentManager fm) {
+    private String[] titles;
+    public AdapterTab(FragmentManager fm, String[] titles) {
         super(fm);
+        this.titles = titles;
     }
 
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
         switch(position){
-            case 0: //FireApp f = (FireApp) context.getApplicationContext();
-                    fragment = new HomeFragment();
-                    break;
-            case 1: fragment = new NewFragment();
+            case 0: fragment = new NewFragment();
                 break;
-            case 2: fragment = new CategoryFragment();
+            case 1: fragment = new BestFragment();
                 break;
         }
         Bundle b = new Bundle();

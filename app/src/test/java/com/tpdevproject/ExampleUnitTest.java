@@ -1,6 +1,6 @@
 package com.tpdevproject;
 
-import com.tpdevproject.Utils.DateTimeUtils;
+import com.tpdevproject.utils.DateTimeUtils;
 
 import org.junit.Test;
 
