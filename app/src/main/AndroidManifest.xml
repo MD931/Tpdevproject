@@ -59,8 +59,9 @@
             android:name=".activities.AddDealActivity"
             android:label="@string/title_activity_add_annonce"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.CompleteProfilActivity"
-            android:label="@string/title_activity_detail"/>
+        <activity
+            android:name=".activities.CompleteProfilActivity"
+            android:label="@string/title_activity_complete"/>
         <activity
             android:name=".activities.DetailActivity"
             android:label="@string/title_activity_detail"

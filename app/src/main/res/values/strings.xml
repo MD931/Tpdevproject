@@ -40,7 +40,7 @@
     <string name="btn_sign_out">Sign Out</string>
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
-    <string name="title_activity_add_annonce">Add Deal</string>
+    <string name="title_activity_add_annonce">Add a Deal</string>
     <string name="add">Add</string>
     <string name="login_before">Please login in before</string>
     <string name="login">Login</string>
@@ -91,5 +91,6 @@
     <string name="username_required">Username required</string>
     <string name="username_field_error">Username length or contains invalid caracters</string>
     <string name="update">Update</string>
+    <string name="complete_your_profile">Please complete your profil</string>
 
 </resources>
